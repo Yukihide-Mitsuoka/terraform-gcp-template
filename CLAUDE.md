@@ -16,8 +16,8 @@ conflict, follow the authority order in [.ai/README.md](.ai/README.md)
 | Field | Value |
 |-------|-------|
 | Project | {{PROJECT_NAME}} — see [.ai/mission.md](.ai/mission.md) |
-| Stack | {{STACK}} |
-| Architecture | Modular monolith, Clean Architecture, DDD — [.ai/architecture.md](.ai/architecture.md) |
+| Stack | Terraform on GCP; modules referenced by tag from [terraform-gcp-modules](https://github.com/Yukihide-Mitsuoka/terraform-gcp-modules) — see [infra/README.md](infra/README.md) |
+| Architecture | Modular monolith, Clean Architecture, DDD — [.ai/architecture.md](.ai/architecture.md); IaC layer: root configs in `infra/envs/`, building blocks referenced (never vendored) |
 | Branching | GitHub Flow; `main` always releasable |
 | Versioning | SemVer via Conventional Commits (automated) |
 

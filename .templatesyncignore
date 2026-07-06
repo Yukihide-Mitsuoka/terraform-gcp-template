@@ -12,3 +12,8 @@ Makefile
 .ai/decision-log.md
 .github/CODEOWNERS
 .templatesyncignore
+
+# terraform-gcp-template additions: never let the ai-dev-foundation sync touch the
+# Terraform layer this template adds on top of the foundation.
+infra/**
+.github/workflows/template-sync.yml
