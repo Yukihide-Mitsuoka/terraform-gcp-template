@@ -13,7 +13,7 @@ help: ## List available targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-18s %s\n", $$1, $$2}'
 
 setup: ## Install git hooks (terraform/tflint/gitleaks come from your machine setup)
-	pre-commit install --hook-type pre-commit --hook-type pre-push
+	@if command -v pre-commit >/dev/null 2>&1; then pre-commit install --hook-type pre-commit --hook-type pre-push; else echo "pre-commit not installed — local hooks skipped (CI runs the same gates)"; fi
 
 format: ## Auto-format terraform (all, or FILE=<path>)
 ifneq ($(FILE),)
