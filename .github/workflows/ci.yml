@@ -19,7 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # TEMPLATE: add your runtime setup action here (setup-node / setup-python / setup-go)
+      # Runtime setup for this stack (runners do not ship terraform)
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
       - run: make setup
       - run: make lint
 
@@ -40,6 +43,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
       - run: make setup
       - run: make build
 
