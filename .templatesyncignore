@@ -11,6 +11,7 @@ Makefile
 .ai/mission.md
 .ai/decision-log.md
 .github/CODEOWNERS
+.github/governance/repository.json
 .templatesyncignore
 
 # terraform-gcp-template additions: never let the ai-dev-foundation sync touch the
