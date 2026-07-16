@@ -17,15 +17,15 @@ next task, or external governance state changes.
 | Item | Verified state |
 |------|----------------|
 | Child repository | `Yukihide-Mitsuoka/terraform-gcp-template` |
-| Child baseline | `main` at merge commit `90bdc904d512d6cadf7efb085a726fca6c6026ef` |
-| Last completed change | [PR #14](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/14), fail-closed planning for stricter managed-ruleset constraints |
-| Accepted parent lock | `64f6fc82de3f7269a96ac534dde8c7ef9093b124` |
+| Child baseline | `main` at merge commit `75dfd6cc21fe4f3ed3988d1ded5a977d8c48d8f7` |
+| Last completed change | [PR #16](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/16), verified internal governance execution boundary |
+| Accepted parent lock | `67d159630daa70d71c5ebb01b4200a394e4b11c4` |
 | Observed parent target | `9ab06004ed129d0d27e4a1876aa03b04d067cc71` on local `../ai-dev-foundation` `origin/main` |
-| Next parent commit | `67d159630daa70d71c5ebb01b4200a394e4b11c4` — verified internal apply execution boundary |
+| Next parent commit | `70ea07add78ea3a80e75d790cb08e6dd43977111` — expose confirmed public apply command |
 | Open child issues | Issue #2 only |
 | Cloud state | No GCP resource is required or was created by this inheritance work |
 
-The baseline above was verified on 2026-07-16 after PR #14 merged. The child worktree
+The baseline above was verified on 2026-07-16 after PR #16 merged. The child worktree
 was clean before this document branch was created.
 
 ## Completed capability
@@ -39,14 +39,16 @@ was clean before this document branch was created.
 - `validate` is offline. `plan` and `audit` use GET-only GitHub discovery. Command and
   exit-code contracts are documented in
   [the governance policy README](../.github/governance/README.md).
-- The internal apply-action planner returns ordered REST request data, side effects, and
-  verification controls. It cannot execute a request and is not exposed as a CLI command.
+- The apply-action planner returns ordered REST request data, side effects, and verification
+  controls. The internal execution boundary requires exact target confirmation, executes
+  one action, reads it back, verifies it, and replans from fresh state; it is not exposed
+  as a CLI command.
 - Existing managed rulesets can produce an update action only when stricter supported
   review, merge-method, and check-integration constraints are preserved; unsupported
   state fails closed.
-- PR #14's required CI and security checks succeeded, and GitHub reported the PR
+- PR #16's required CI, security, and link checks succeeded, and GitHub reported the PR
   mergeable before merge.
-- No policy-driven apply command has been inherited or executed in this child.
+- No public policy-driven apply command has been inherited or executed in this child.
 
 ## Current external governance state
 
@@ -61,7 +63,7 @@ A GET-only `plan` against this repository on 2026-07-16 returned `status: drift`
 | Compliant | Dependabot security updates are disabled because Renovate is selected |
 | Compliant | Secret scanning and push protection are enabled |
 
-The `scan` workflow currently has IaC path filters. A non-IaC merge such as PR #14 does
+The `scan` workflow currently has IaC path filters. A non-IaC merge such as PR #16 does
 not produce a `scan` check on the new branch head. Accepted
 [ADR-0003](adr/0003-adopt-direct-parent-template-inheritance.md) has higher authority than
 Issue #2 and the current repository policy: `scan` must not be applied as a required
@@ -70,40 +72,49 @@ become unmergeable after enforcement.
 
 ## Next recommended task
 
-Create one PR for parent commit `67d159630daa70d71c5ebb01b4200a394e4b11c4`, using a
-branch such as `feat/2-inherit-governance-execution-boundary`.
+Create one PR for parent commit `70ea07add78ea3a80e75d790cb08e6dd43977111`, using a
+branch such as `feat/2-expose-confirmed-governance-apply`.
 
 The verified inheritance plan reports:
 
 | Classification | Paths |
 |----------------|-------|
-| Add | `scripts/tests/test_github_governance_apply_execution.py` |
-| Modify | `.github/governance/README.md`, `scripts/github_governance.py` |
-| Protected | `.ai/decision-log.md` |
+| Add | None |
+| Modify | `.github/governance/README.md`, `scripts/github_governance.py`, `scripts/tests/test_github_governance_cli.py` |
+| Protected | `.ai/decision-log.md`, `README.md`, `docs/usage.md`, `docs/usage.ja.md` |
 | Candidate delete / unowned | None |
 
-The parent slice introduces an internal execution boundary but leaves public `apply`
-unavailable. It requires exact target confirmation, sends at most one planned action,
-reads back and verifies affected controls, and replans from fresh state. A repeated
-action or any write, read-back, verification, or replanning failure stops without retry
-or automatic rollback. Preserve inherited file content and modes exactly. Do not invoke
-the executor against GitHub; no live write is authorized. Do not overwrite the protected
-decision log; review the parent entry and append a child-specific entry only if the
-decision applies here. Advance the lock to `67d1596...` only in the same reviewed PR as
-the accepted inherited files.
+The parent slice exposes `apply --repo OWNER/REPOSITORY --confirm-repo OWNER/REPOSITORY`.
+The exact confirmation must match before any GitHub discovery, then the command delegates
+to the inherited one-action execution boundary. It requires local `gh` authentication with
+repository Administration write access and reports success or redacted partial-failure
+evidence. Do not invoke `apply`; inheriting its CLI is not authorization to execute it.
+The current `scan` preflight remains unresolved, so it also cannot justify a live write.
+Keep `scripts/setup-github.sh` for vulnerability alerts and private vulnerability reporting
+until policy-owned adapters exist; do not remove it during this inheritance.
+
+Preserve inherited file content and modes exactly. The parent `README.md` and usage guides
+are protected here; do not copy them automatically. Review whether child-specific usage
+documentation needs an adapted update while preserving Terraform onboarding content. Do
+not overwrite the protected decision log; review the parent entry and append a
+child-specific entry only if the decision applies here. Advance the lock to `70ea07a...` only
+in the same reviewed PR as the accepted inherited files.
 
 ### Acceptance checks
 
 1. Confirm `main` is clean and current, then run the inheritance validator and planner
    from [the inheritance guide](troubleshooting/template-inheritance.md).
-2. Confirm the planner still selects `67d1596...`. Stop if the lock, origin identity,
+2. Confirm the planner still selects `70ea07a...`. Stop if the lock, origin identity,
    or first-parent result differs from this document.
-3. Verify inherited blobs and executable modes against that parent commit.
+3. Verify inherited blobs and executable modes against that parent commit; assess the
+   protected usage documentation separately rather than copying it.
 4. Run `make format`, `make lint`, `make doctor`, `make test-unit`, `make test`,
    `make security-scan`, and `make build`; report unavailable local scanners honestly.
-5. Run governance `validate`. A live `plan` is permitted only as GET-only evidence and
-   must leave the worktree and GitHub settings unchanged.
-6. Open a complete Issue #2 PR, wait for green CI, and stop before the next parent commit.
+5. Run governance `validate` and inspect CLI help. A live `plan` is permitted only as
+   GET-only evidence and must leave the worktree and GitHub settings unchanged. Do not
+   invoke `apply`.
+6. Open a complete Issue #2 PR, wait for green CI, and stop before command execution or
+   the next parent commit.
 
 ## Parent queue after the next task
 
@@ -112,7 +123,6 @@ after every lock advance; this table is orientation, not authority.
 
 | Order | Parent commit | Parent change | Child review focus |
 |-------|---------------|---------------|--------------------|
-| 4 | `70ea07a` | Expose confirmed apply command | Requires a reviewed live plan and separate explicit human approval before any GitHub write |
 | 5 | `d4c284c` | Enforce vulnerability intake controls | Re-check repository security visibility and permissions |
 | 6 | `cce70e4` | Model repository collaboration settings | Preserve the child solo-development defaults |
 | 7 | `91276b9` | Migrate legacy setup to the policy wrapper | Breaking parent change; update child usage and migration guidance |
@@ -145,6 +155,6 @@ python3 scripts/github_governance.py validate --root .
 ```
 
 The synchronization commands were run successfully on 2026-07-16 before this document
-branch was created; `git pull` fast-forwarded main to PR #14. The three Python commands
+branch was created; `git pull` fast-forwarded main to PR #16. The three Python commands
 were also verified against the merged content. The inheritance planner performs no
 fetch, so refreshing the parent repository is a separate deliberate action.
