@@ -20,6 +20,7 @@ in `.ai/`; decisions in `docs/adr/`. Writing rules: `.ai/documentation.md`.
 | [troubleshooting/](troubleshooting/) | Known failure modes → diagnosis → fix | "it's broken, what now?" |
 | [templates/](templates/) | Reusable document templates (requirements, ...) | start a standard document |
 | [roadmap.md](roadmap.md) | Direction and planned milestones | prioritize work |
+| [handoff.md](handoff.md) | Verified restart point, next inheritance task, and approval boundaries | resume current work safely |
 | [glossary.md](glossary.md) | Ubiquitous language dictionary | name things correctly |
 | [usage.md](usage.md) | Using the template on a new machine/account; new-project setup (日本語: [usage.ja.md](usage.ja.md)) | onboard a new environment |
 | [ai-instruction-files.ja.md](ai-instruction-files.ja.md) | 日本語: AIへ指示を出す全ファイルの目的・利用シーン・利用例 | understand the AI-instruction file set |
