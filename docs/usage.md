@@ -91,8 +91,8 @@ Review `plan` before `apply`. Only `apply` changes settings; it requires local r
 Administration access and an exact target confirmation, then verifies each action by
 read-back. Do not run it in CI or use it without the repository owner's explicit approval
 for that exact target. `bash scripts/setup-github.sh` remains temporarily for legacy
-security and repository settings that policy does not own yet, including vulnerability
-alerts and private vulnerability reporting; review its fixed settings separately.
+repository settings that policy does not own yet, such as squash-only merges and
+Discussions; review its fixed settings separately.
 
 ### 6. Install local gates and point your agent at it
 

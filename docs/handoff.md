@@ -105,7 +105,7 @@ Preserve inherited file content and modes exactly. The parent `README.md` and us
 are protected here; do not copy them automatically. Review whether child-specific usage
 documentation needs an adapted update while preserving Terraform onboarding content. Do
 not overwrite the protected decision log; review the parent entry and append a
-child-specific entry only if the decision applies here. Advance the lock to `70ea07a...` only
+child-specific entry only if the decision applies here. Advance the lock to `d4c284c...` only
 in the same reviewed PR as the accepted inherited files.
 
 ### Acceptance checks
