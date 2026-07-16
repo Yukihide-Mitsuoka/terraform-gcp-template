@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-07-16 | ADR-0003 | Adopt the accepted ai-dev-foundation manifest-driven direct-parent inheritance architecture; bootstrap from verified parent commit `8035bbbf` before advancing one first-parent commit per PR | [ADR-0003](../docs/adr/0003-adopt-direct-parent-template-inheritance.md) |
 | 2026-07-03 | LOG-0007 | Markdown formatting MUST be frontmatter-aware: mdformat pinned via pre-commit with `mdformat-frontmatter` + `mdformat-gfm`, config in `.mdformat.toml` (`wrap=keep`, `number=true`). A naive run once collapsed all YAML frontmatter into headings — never use a formatter without these plugins | [.mdformat.toml](../.mdformat.toml) |
 | 2026-07-02 | ADR-0002 | AI-facing docs are written in English | [ADR-0002](../docs/adr/0002-ai-facing-docs-in-english.md) |
 | 2026-07-02 | ADR-0001 | Record architecture decisions as ADRs | [ADR-0001](../docs/adr/0001-record-architecture-decisions.md) |
