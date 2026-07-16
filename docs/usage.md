@@ -83,11 +83,14 @@ DRY_RUN=1 bash scripts/setup-github.sh OWNER/REPOSITORY
 bash scripts/setup-github.sh OWNER/REPOSITORY --confirm-repo OWNER/REPOSITORY
 ```
 
-`validate` is offline. `plan` and `audit` use authenticated, GET-only `gh api` calls and
-print the same redacted JSON comparison. A required check name that is not observed on
-the target branch head is drift; unrelated observed checks are ignored. `plan` returns
-0 after a completed comparison. `audit` returns 1 for drift or permission-limited
-unknown state. Both return 2 for policy, input, or GitHub read failures.
+`validate` is offline and automatically resolves the foundation, the single profile
+chain in `.github/governance/profiles/`, and repository policy. Required checks are
+monotonic: profiles and repository policy add checks but cannot remove foundation
+checks. `plan` and `audit` use authenticated, GET-only `gh api` calls and print the same
+redacted JSON comparison. A required check name that is not observed on the target
+branch head is drift; unrelated observed checks are ignored. `plan` returns 0 after a
+completed comparison. `audit` returns 1 for drift or permission-limited unknown state.
+Both return 2 for policy, input, or GitHub read failures.
 
 See [GitHub governance troubleshooting](troubleshooting/github-governance.md) when
 `audit` exits with status 1.
