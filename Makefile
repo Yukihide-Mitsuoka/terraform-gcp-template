@@ -30,6 +30,7 @@ test: test-unit test-integration ## Full suite
 
 test-unit: ## Fast gate: Terraform formatting and workflow contract tests
 	terraform fmt -check -recursive infra
+	python3 -m unittest discover -s tests/governance -p 'test_*.py'
 	python3 -m unittest discover -s tests/workflows -p 'test_*.py'
 
 test-integration: ## terraform test for every dir that has *.tftest.hcl
@@ -66,5 +67,6 @@ clean: ## Remove caches/artifacts inside the workspace only (GR-031)
 
 doctor: ## Foundation self-check: metadata invariants + guard-hook tests
 	@bash scripts/template-check.sh
+	@python3 -m unittest discover -s tests/governance -p 'test_*.py'
 	@python3 -m unittest discover -s tests/workflows -p 'test_*.py'
 	@bash .claude/hooks/tests/guard-bash.test.sh

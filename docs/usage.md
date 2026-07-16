@@ -92,6 +92,10 @@ branch head is drift; unrelated observed checks are ignored. `plan` returns 0 af
 completed comparison. `audit` returns 1 for drift or permission-limited unknown state.
 Both return 2 for policy, input, or GitHub read failures.
 
+This template declares the `terraform-gcp` profile, which adds the always-reported
+`iac-scan` context to the nine foundation checks. The repository policy does not repeat
+those family checks; it contains repository-specific operational overrides only.
+
 See [GitHub governance troubleshooting](troubleshooting/github-governance.md) when
 `audit` exits with status 1.
 
