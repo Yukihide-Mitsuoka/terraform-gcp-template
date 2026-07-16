@@ -1,5 +1,5 @@
-# Files the template-sync workflow must NEVER overwrite in downstream repos —
-# everything a project customizes. Rules/workflows/skills DO sync (that's the point).
+# Legacy Template Sync remains non-authoritative during manifest migration. Keep every
+# manifest-protected path out of that transport as well.
 src/**
 tests/**
 docs/**
@@ -8,10 +8,31 @@ CLAUDE.md
 README.md
 Makefile
 .env.example
+.gitignore
+.ai/architecture.md
+.ai/coding-rules.md
 .ai/mission.md
 .ai/decision-log.md
+.ai/guardrails.md
+.ai/review-checklist.md
+.ai/workflow.md
+.claude/hooks/guard-bash.sh
+.claude/hooks/tests/**
+.claude/settings.json
+.devcontainer/**
+.skills/architecture.skill.md
+.skills/bugfix.skill.md
+.skills/documentation.skill.md
+.skills/feature.skill.md
+.skills/refactor.skill.md
+.skills/release.skill.md
+.skills/review.skill.md
+.skills/security.skill.md
+.skills/test.skill.md
 .github/CODEOWNERS
 .github/governance/repository.json
+.github/inheritance/lock.json
+.github/inheritance/manifest.json
 .templatesyncignore
 
 # terraform-gcp-template additions: never let the ai-dev-foundation sync touch the
@@ -21,3 +42,5 @@ infra/**
 # ci.yml carries this stack's runtime setup (hashicorp/setup-terraform); port base CI
 # improvements manually when a sync PR shows a diff here.
 .github/workflows/ci.yml
+.github/workflows/iac.yml
+.github/workflows/security.yml
