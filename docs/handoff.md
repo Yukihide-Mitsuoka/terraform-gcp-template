@@ -17,17 +17,17 @@ changes. Architectural decisions remain in ADRs and the append-only decision log
 | Item | Verified state |
 |------|----------------|
 | Child repository | `Yukihide-Mitsuoka/terraform-gcp-template` |
-| Child baseline | `main` at PR #28 merge commit `bbbeee0c99e2da3f60b58c9fe43f87150cbfab12` |
-| Last completed change | [PR #28](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/28), added the always-reported `iac-scan` context |
+| Child baseline | `main` at PR #29 merge commit `6763ef4ed0232038b684820744241d8e9807f5aa` |
+| Last completed change | [PR #29](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/29), added the child-owned `terraform-gcp` governance profile |
 | Accepted parent lock | `9ab06004ed129d0d27e4a1876aa03b04d067cc71` |
 | Parent target | Same commit; the read-only planner reports `up_to_date` |
-| Work in progress | Add the child-owned `terraform-gcp` governance profile and remove legacy `scan` policy duplication |
+| Work in progress | None in this repository; local Issue #2 implementation is complete |
 | Open child issues | Issue #2 only |
 | Cloud state | No GCP resource is required or was created by this work |
 
-The `main` baseline and profile precondition were verified on 2026-07-16. The current
-branch changes policy files and local contract tests only. It makes no GitHub repository
-setting change and does not run Terraform against GCP.
+The merged `main` baseline, profile resolution, and external check observation were
+verified on 2026-07-16. No GitHub repository setting was changed, and Terraform was not
+run against GCP.
 
 ## Completed capability
 
@@ -37,14 +37,18 @@ setting change and does not run Terraform against GCP.
   monotonic order with stable deduplication.
 - PR #28 and its resulting `main` push both reported a successful job named exactly
   `iac-scan`. On the `main` push, the non-IaC path succeeded and both scanners skipped.
+- PR #29 and its resulting
+  [`main` push](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/actions/runs/29497973295)
+  also reported successful `iac-scan`; merged policy validation resolves the nine
+  foundation checks plus that Terraform check and no legacy `scan`.
 - IaC changes still invoke strict Trivy and Checkov. The historical GCP-0076 finding in
   external module `v0.1.0` remains unsuppressed.
 - Governance `validate` is offline. `plan` and `audit` use GET-only GitHub discovery.
   Live governance `apply` has never been authorized or invoked for this repository.
 
-## Current profile candidate
+## Accepted profile state
 
-The current branch declares `.github/governance/profiles/terraform-gcp.json` with parent
+Merged `main` declares `.github/governance/profiles/terraform-gcp.json` with parent
 `ai-dev-foundation` and required check `iac-scan`. The resolved check ownership is:
 
 | Layer | Required checks |
@@ -65,7 +69,7 @@ exist in or propagate to `nextjs-saas-template`.
 
 ## Current external governance state
 
-A GET-only `plan` using the candidate policy on 2026-07-16 returned `status: drift` and
+A GET-only `plan` from merged `main` on 2026-07-16 returned `status: drift` and
 no `unknown` controls:
 
 | State | Controls |
@@ -81,30 +85,26 @@ This is evidence only. No write action from the plan is authorized by this docum
 
 ## Next recommended task
 
-After the current profile PR merges:
+The local Issue #2 implementation is complete. Next:
 
-1. Verify the PR and resulting `main` push still report all ten checks, including
-   `iac-scan`.
-2. Re-run governance `validate` and the GET-only `plan` from merged `main` and preserve
-   the evidence in this handoff.
-3. Treat the local Issue #2 migration implementation as complete; keep any live
-   governance reconciliation as a separately presented and explicitly approved action.
-4. Migrate `secure-ga4-bq-template` to this repository as its direct parent in small,
+1. After this evidence-only document update merges, the owner may close Issue #2 as an
+   implementation task without claiming that live governance drift was reconciled.
+2. Migrate `secure-ga4-bq-template` to this repository as its direct parent in small,
    reviewed PRs. Inspect its protected paths before inheriting the Terraform profile.
+3. Keep any live governance reconciliation as a separately presented and explicitly
+   approved action with target, ordered writes, and side effects.
 
 Do not change `nextjs-saas-template` as part of the Terraform downstream migration. It
 remains a separate direct child of `ai-dev-foundation` and resolves no Terraform profile.
 
-### Acceptance checks for the current profile PR
+### Merged-main evidence
 
-1. The failing-first child contract tests must pass and resolve exactly the foundation
-   checks plus `iac-scan`, with no legacy `scan`.
-2. Run `make format`, `make lint`, `make doctor`, `make test-unit`, `make test`,
-   `make security-scan`, and `make build`; report unavailable local scanners honestly.
-3. Inheritance `validate` and `plan` must remain `up_to_date` at `9ab0600`.
-4. Governance `validate` must load exactly one `terraform-gcp` profile. A GET-only plan
-   must report `branch.required_status_checks_observed` compliant.
-5. Confirm the PR reports successful `iac-scan` plus the nine foundation checks.
+- `make test-unit`: three governance tests and four workflow tests passed.
+- Inheritance `validate` passed and `plan` reported `up_to_date` at `9ab0600`.
+- Governance `validate` loaded exactly one `terraform-gcp` profile.
+- The GET-only plan reported `branch.required_status_checks_observed` compliant for all
+  ten resolved checks and returned no `unknown` controls.
+- The `main` IaC workflow completed successfully at merge commit `6763ef4`.
 
 ## Remaining parent queue
 
@@ -118,8 +118,8 @@ checkout; do not infer future parent commits from this document.
   actions, side effects, and explicit owner approval for that exact write.
 - Do not run Terraform `apply`, create a bucket, or create any GCP resource for this work.
 - Do not suppress GCP-0076 merely to make an IaC-changing PR green.
-- Update or close Issue #2 after the profile PR and merged-main evidence are complete;
-  do not imply that live GitHub drift was reconciled.
+- Closing Issue #2 may represent implementation completion only; do not imply that live
+  GitHub drift was reconciled.
 
 ## Verified restart commands
 
@@ -133,6 +133,7 @@ python3 scripts/github_governance.py plan --root . \
   --repo Yukihide-Mitsuoka/terraform-gcp-template
 ```
 
-The inheritance commands, profile validation, and GET-only governance plan were verified
-on 2026-07-16. The inheritance planner performs no fetch; refreshing the parent checkout
-is a separate deliberate action.
+The inheritance commands, profile validation, GET-only governance plan, and `main`
+workflow run were verified on 2026-07-16 at merge commit `6763ef4`. The inheritance
+planner performs no fetch; refreshing the parent checkout is a separate deliberate
+action.
