@@ -50,6 +50,6 @@ separate reviewed action; do not change the lock only to silence an error.
 
 Validation and planning perform no network request, fetch, checkout, file write,
 materialization, deletion, GitHub API call, Terraform command, or GCP operation. The
-planner script and tests are exact blobs from parent commit
-`1e99d395ff949a40d45d888f59a6da41fc86e502`. Importing this bootstrap tool does not
-advance the accepted parent lock.
+planner script and tests are exact blobs from accepted parent commit
+`1e99d395ff949a40d45d888f59a6da41fc86e502`. Future lock advances remain separate,
+reviewed changes.
