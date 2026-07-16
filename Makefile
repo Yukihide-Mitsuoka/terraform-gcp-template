@@ -26,10 +26,11 @@ lint: ## Check-only, zero warnings (COD-001); never fixes
 	terraform fmt -check -recursive infra
 	@if command -v tflint >/dev/null 2>&1; then tflint --recursive --chdir infra; else echo "tflint not installed — CI still enforces it"; fi
 
-test: test-integration ## Full suite (no app-level unit tests in a pure-IaC starter)
+test: test-unit test-integration ## Full suite
 
-test-unit: ## Fast gate for pre-push: fmt check only (terraform has no fast unit layer)
+test-unit: ## Fast gate: Terraform formatting and workflow contract tests
 	terraform fmt -check -recursive infra
+	python3 -m unittest discover -s tests/workflows -p 'test_*.py'
 
 test-integration: ## terraform test for every dir that has *.tftest.hcl
 	@set -e; for dir in $$(find infra -name '*.tftest.hcl' -exec dirname {} \; | sort -u); do \
@@ -65,4 +66,5 @@ clean: ## Remove caches/artifacts inside the workspace only (GR-031)
 
 doctor: ## Foundation self-check: metadata invariants + guard-hook tests
 	@bash scripts/template-check.sh
+	@python3 -m unittest discover -s tests/workflows -p 'test_*.py'
 	@bash .claude/hooks/tests/guard-bash.test.sh
