@@ -2,18 +2,6 @@
   "schema_version": 1,
   "overrides": {
     "required_approvals": 0,
-    "required_checks": [
-      "lint",
-      "test",
-      "build",
-      "doctor",
-      "link-check",
-      "pr-quality",
-      "secret-scan",
-      "dependency-scan",
-      "license-check",
-      "scan"
-    ],
     "delete_branch_on_merge": true
   }
 }

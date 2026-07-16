@@ -55,6 +55,7 @@
     ".devcontainer/",
     ".env.example",
     ".github/CODEOWNERS",
+    ".github/governance/profiles/",
     ".github/governance/repository.json",
     ".github/inheritance/lock.json",
     ".github/inheritance/manifest.json",
