@@ -49,9 +49,8 @@ workflows, docs skeleton) comes from the base — see its
    changing settings. Use `audit` for a CI-suitable nonzero drift result. After reviewing
    the plan and obtaining the repository owner's explicit approval for that target, use
    `apply` with an exact `--confirm-repo OWNER/REPOSITORY`; it changes settings.
-   `scripts/setup-github.sh` remains temporarily as the fixed legacy entry point while
-   its policy-driven compatibility wrapper is prepared. Its API-managed settings are
-   now represented by policy.
+   `scripts/setup-github.sh` is a compatibility wrapper for the same policy-driven
+   `plan` and explicitly confirmed `apply` paths.
 5. **Install local gates**: `make setup`.
 6. **Verify**: `make doctor && make build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
