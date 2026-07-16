@@ -44,7 +44,11 @@ workflows, docs skeleton) comes from the base — see its
    `TEMPLATE_SYNC_ENABLED=true` to receive updates.
 3. **Replace placeholders**: `grep -rn "{{" . --exclude-dir=.git` — mission, project name,
    state bucket in `infra/envs/*/versions.tf`.
-4. **Configure GitHub** (one-time): `bash scripts/setup-github.sh`.
+4. **Inspect GitHub governance**: run `python3 scripts/github_governance.py plan --root .
+   --repo OWNER/REPOSITORY` after `gh auth login`. It reports policy drift without
+   changing settings. Use `audit` for a CI-suitable nonzero drift result. Policy-driven
+   `apply` is not implemented yet; `scripts/setup-github.sh` remains the temporary
+   fixed-settings apply path.
 5. **Install local gates**: `make setup`.
 6. **Verify**: `make doctor && make build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
