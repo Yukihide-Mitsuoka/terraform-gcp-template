@@ -90,9 +90,10 @@ See [GitHub governance troubleshooting](troubleshooting/github-governance.md) wh
 Review `plan` before `apply`. Only `apply` changes settings; it requires local repository
 Administration access and an exact target confirmation, then verifies each action by
 read-back. Do not run it in CI or use it without the repository owner's explicit approval
-for that exact target. `bash scripts/setup-github.sh` remains temporarily for legacy
-repository settings that policy does not own yet, such as squash-only merges and
-Discussions; review its fixed settings separately.
+for that exact target. Policy enforces squash-only merges and lets repository overrides
+choose Discussions and squash commit-message defaults. `bash scripts/setup-github.sh`
+remains temporarily as a fixed legacy entry point while its compatibility wrapper is
+prepared.
 
 ### 6. Install local gates and point your agent at it
 
