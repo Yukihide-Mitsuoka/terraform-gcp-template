@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-07-16 | LOG-0012 | Advance the accepted parent lock to `64f6fc8`; existing managed-ruleset update actions are planned only when branch conditions and rule inventory are supported, while stricter review, merge-method, and check-integration constraints are preserved and unknown constraints fail closed | [.github/governance/README.md](../.github/governance/README.md) |
 | 2026-07-16 | LOG-0011 | Advance the accepted parent lock to `9411ad67`; governance apply-action planning remains internal pure data, executes no request, exposes no public `apply`, and fails closed on unknown state, unobserved checks, or unsafe ruleset updates | [.github/governance/README.md](../.github/governance/README.md) |
 | 2026-07-16 | LOG-0010 | Bootstrap the read-only one-first-parent planner and tests as exact blobs from parent commit `1e99d395` without advancing lock `8035bbbf`; planning uses only an existing identity-checked local parent checkout and cannot fetch, materialize, or delete | [ADR-0003](../docs/adr/0003-adopt-direct-parent-template-inheritance.md) |
 | 2026-07-16 | LOG-0009 | Bootstrap the offline inheritance validator and tests as exact blobs from parent commit `4035dbd0` without advancing lock `8035bbbf`; the bootstrap tool validates only the child-owned contract and does not imply acceptance of intervening parent history | [ADR-0003](../docs/adr/0003-adopt-direct-parent-template-inheritance.md) |
