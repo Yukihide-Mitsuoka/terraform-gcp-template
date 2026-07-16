@@ -7,148 +7,122 @@ updated: 2026-07-16
 
 # Template Inheritance Handoff
 
-This document records the verified restart point for Issue
-[#2](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/2). It is a
-mutable status document, not a decision record. Update it when the accepted parent lock,
-next task, or external governance state changes.
+This mutable document records the verified restart point for Issue
+[#2](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/2). Update it
+when the accepted parent lock, workflow proof, next task, or external governance state
+changes. Architectural decisions remain in ADRs and the append-only decision log.
 
 ## Restart point
 
 | Item | Verified state |
 |------|----------------|
 | Child repository | `Yukihide-Mitsuoka/terraform-gcp-template` |
-| Child baseline | `main` at merge commit `d8fc759220007751d534f7d50f917db4c89f08cd` |
-| Last completed change | [PR #18](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/18), exposed the confirmed public governance `apply` CLI without executing it |
-| Accepted parent lock | `70ea07add78ea3a80e75d790cb08e6dd43977111` |
-| Observed parent target | `9ab06004ed129d0d27e4a1876aa03b04d067cc71` on local `../ai-dev-foundation` `origin/main` |
-| Next parent commit | `d4c284c263b7a5b27034288b46558850c79913ae` — enforce vulnerability intake controls |
+| Child baseline | `main` at merge commit `d789accc55d71e69ae0d668efa069b9ef956a320` |
+| Last completed change | [PR #27](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/27), inherited the governance profile-chain resolver |
+| Accepted parent lock | `9ab06004ed129d0d27e4a1876aa03b04d067cc71` |
+| Parent target | Same commit; the read-only planner reports `up_to_date` |
+| Work in progress | Add a unique, always-reported `iac-scan` workflow context without changing live governance |
 | Open child issues | Issue #2 only |
-| Cloud state | No GCP resource is required or was created by this inheritance work |
+| Cloud state | No GCP resource is required or was created by this work |
 
-The baseline above was verified on 2026-07-16 after PR #18 merged. The child worktree
-was clean before this document branch was created. PR #18 made no GitHub repository
-setting change and no GCP operation.
+The baseline was verified after PR #27 merged. The current branch changes only the
+child-owned IaC workflow, its local contract test, canonical test targets, and status
+documentation. It does not change repository settings or run Terraform against GCP.
 
 ## Completed capability
 
-- The manifest and lock implement one-first-parent-commit-at-a-time inheritance under
+- The direct-parent inheritance contract and lock implement the accepted one-first-parent-
+  commit-at-a-time process in
   [ADR-0003](adr/0003-adopt-direct-parent-template-inheritance.md).
-- Governance policy currently resolves zero required approvals, Renovate, merged-branch
-  deletion, and the foundation checks plus `scan`. The `scan` entry is unresolved state,
-  not an approved enforcement target; accepted ADR-0003 prohibits requiring the current
-  path-filtered check.
-- `validate` is offline. `plan` and `audit` use GET-only GitHub discovery. Command and
-  exit-code contracts are documented in
-  [the governance policy README](../.github/governance/README.md).
-- The apply-action planner returns ordered REST request data, side effects, and verification
-  controls. The public `apply` CLI requires an exact `--repo` and `--confirm-repo` match
-  before GitHub discovery, then delegates to the internal execution boundary: one action,
-  read-back, verification, and fresh replanning at a time.
-- Existing managed rulesets can produce an update action only when stricter supported
-  review, merge-method, and check-integration constraints are preserved; unsupported
-  state fails closed.
-- `apply` was not invoked. Its presence is not authorization for a live repository write;
-  it still requires an owner-approved target, actions, side effects, and `scan` resolution.
-- `scripts/setup-github.sh` remains for legacy settings that policy does not own yet,
-  including vulnerability alerts and private vulnerability reporting. Do not remove it
-  until policy-owned adapters exist (GR-030).
-- PR #18's required CI, security, and link checks succeeded, and GitHub reported the PR
-  mergeable before merge.
+- The child is synchronized through the current parent target `9ab0600`; there is no
+  remaining parent queue at this checkpoint.
+- Governance policy resolves foundation, profile, and repository required checks with
+  stable deduplication. No Terraform profile is selected yet.
+- `validate` is offline. Governance `plan` and `audit` use GET-only GitHub discovery.
+  The public `apply` boundary requires exact repository confirmation, one action at a
+  time, read-back verification, and fresh replanning.
+- Live governance `apply` has never been authorized or invoked for this repository.
+- The existing path-filtered `scan` policy value remains unresolved and must not be
+  enforced. ADR-0003 requires a unique always-reported context first.
+
+## Current workflow candidate
+
+The current branch introduces job ID and display name `iac-scan` with these contracts:
+
+- the job runs for every pull request and every push to `main`;
+- checkout includes full history, and event base/head SHAs define the changed range;
+- Terraform, `infra/`, `k8s/`, or `helm/` changes run both Trivy and Checkov;
+- a proven non-IaC range reports success without invoking the scanners;
+- an absent, zero, or unavailable range fails safe by running the full scan;
+- Trivy still fails on MEDIUM or higher findings, and Checkov remains strict.
+
+The historical Trivy finding GCP-0076 in external module version `v0.1.0` is not
+suppressed. An IaC-changing PR will continue to fail until that module enables subnet
+flow logs or the dependency is upgraded to a compliant version. This workflow PR has no
+IaC diff, so its scanner steps should skip while the `iac-scan` context succeeds.
+
+Local contract tests first failed against the old workflow, then passed after the change.
+GitHub Actions is still the authority for workflow syntax and context naming. Do not use
+`iac-scan` in enforced policy until the PR and the resulting `main` push both show that
+exact successful context.
 
 ## Current external governance state
 
-A GET-only `plan` against this repository after PR #18 merged on 2026-07-16 returned
-`status: drift` with no `unknown` controls.
+A GET-only `plan` on 2026-07-16 returned `status: drift` and no `unknown` controls:
 
 | State | Controls |
 |-------|----------|
-| Drift | The managed ruleset is absent, so pull-request, required-check, force-push, and admin-bypass controls have no current managed value |
-| Drift | `scan` is required by child policy but was not observed on the current `main` head |
-| Drift | `delete_branch_on_merge` is `false`; policy requires `true` |
-| Compliant | Dependabot security updates are disabled because Renovate is selected |
+| Drift | The managed ruleset is absent; pull-request, required-check, force-push, and admin-bypass controls have no managed value |
+| Drift | Policy requests legacy `scan`, but current `main` observed only the nine foundation checks |
+| Drift | Merged-branch deletion, squash-only strategy, and squash commit formatting differ |
+| Drift | Vulnerability alerts and private vulnerability reporting are disabled |
+| Compliant | Discussions are disabled and Dependabot security updates are disabled because Renovate is selected |
 | Compliant | Secret scanning and push protection are enabled |
 
-The `scan` workflow currently has IaC path filters. A non-IaC merge such as PR #18 does
-not produce a `scan` check on the new branch head. Accepted
-[ADR-0003](adr/0003-adopt-direct-parent-template-inheritance.md) has higher authority than
-Issue #2 and the current repository policy: `scan` must not be applied as a required
-check until it exposes a unique, always-reported context. Otherwise non-IaC PRs may
-become unmergeable after enforcement.
+This is evidence only. No write action from the plan is authorized by this document.
 
 ## Next recommended task
 
-Create one PR for parent commit `d4c284c263b7a5b27034288b46558850c79913ae`, using a
-branch such as `feat/2-enforce-vulnerability-intake-controls`.
+After the current workflow PR merges:
 
-The verified inheritance plan reports:
+1. Verify the merged PR and subsequent `main` push both report successful `iac-scan`.
+2. In a separate PR, change the child repository policy from legacy `scan` to
+   `iac-scan`.
+3. Add `.github/governance/profiles/terraform-gcp.json` with parent
+   `ai-dev-foundation` and required check `iac-scan`.
+4. Extend child inheritance ownership so the profile directory can propagate safely to
+   downstream `secure-ga4-bq-template`; review that child separately before inheritance.
+5. Run inheritance and governance validation plus a GET-only governance plan. Do not
+   execute `apply`.
 
-| Classification | Paths |
-|----------------|-------|
-| Add | None |
-| Modify | `.ai/security.md`, `.github/governance/README.md`, `.github/governance/foundation.json`, `scripts/github_governance.py`, `scripts/tests/test_github_governance.py`, `scripts/tests/test_github_governance_apply_actions.py`, `scripts/tests/test_github_governance_comparison.py`, `scripts/tests/test_github_governance_discovery.py` |
-| Protected | `docs/usage.md`, `docs/usage.ja.md` |
-| Candidate delete / unowned | None |
+Keeping workflow proof and policy selection in separate PRs prevents a required context
+from being named before GitHub has observed it. The profile should add only the
+Terraform-specific check; the foundation's nine checks remain inherited automatically.
 
-The parent slice makes Dependabot vulnerability alerts and private vulnerability reporting
-immutable `SEC-003` foundation minimums. It distinguishes a known disabled setting from a
-permission-limited `unknown` state and plans only enable-only actions for confirmed drift.
-The inherited `.ai/security.md` must match the parent blob exactly, including its `SEC-003`
-rules. Review the protected usage guides for an accurate child-specific explanation while
-preserving Terraform onboarding content.
+### Acceptance checks for the current workflow PR
 
-The public `apply` command is available but remains unauthorized for live use in this
-child. The unresolved `scan` preflight and the required per-target owner approval still
-prohibit a write. Keep `scripts/setup-github.sh` until policy-owned adapters exist; do
-not remove it during this inheritance.
-
-Preserve inherited file content and modes exactly. The parent `README.md` and usage guides
-are protected here; do not copy them automatically. Review whether child-specific usage
-documentation needs an adapted update while preserving Terraform onboarding content. Do
-not overwrite the protected decision log; review the parent entry and append a
-child-specific entry only if the decision applies here. Advance the lock to `d4c284c...` only
-in the same reviewed PR as the accepted inherited files.
-
-### Acceptance checks
-
-1. Confirm `main` is clean and current, then run the inheritance validator and planner
-   from [the inheritance guide](troubleshooting/template-inheritance.md).
-2. Confirm the planner still selects `d4c284c...`. Stop if the lock, origin identity,
-   or first-parent result differs from this document.
-3. Verify inherited blobs and executable modes against that parent commit. Assess the
-   protected usage documentation separately rather than copying it automatically.
-4. Run `make format`, `make lint`, `make doctor`, `make test-unit`, `make test`,
+1. Run `make format`, `make lint`, `make doctor`, `make test-unit`, `make test`,
    `make security-scan`, and `make build`; report unavailable local scanners honestly.
-5. Run governance `validate`. A live `plan` is permitted only as GET-only evidence and
-   must leave the worktree and GitHub settings unchanged. Do not invoke `apply`.
-6. Open a complete Issue #2 PR, wait for green CI, and stop before command execution or
-   the next parent commit.
+2. Run inheritance `validate` and `plan`; they must remain `up_to_date` at `9ab0600`.
+3. Run governance `validate`; it should still resolve legacy `scan`, because policy
+   migration is intentionally deferred.
+4. Confirm the PR reports successful `iac-scan` plus the existing required checks.
+5. Merge, then verify `iac-scan` on the new `main` head before starting the policy PR.
 
-## Remaining parent queue after the next task
+## Remaining parent queue
 
-Process each row as a separate reviewed PR in first-parent order. Re-run the planner
-after every lock advance; this table is orientation, not authority.
-
-| Order | Parent commit | Parent change | Child review focus |
-|-------|---------------|---------------|--------------------|
-| 6 | `cce70e4` | Model repository collaboration settings | Preserve the child solo-development defaults |
-| 7 | `91276b9` | Migrate legacy setup to the policy wrapper | Breaking parent change; update child usage and migration guidance |
-| 8 | `32c1f29` | Propose hardened template inheritance | Parent architecture is protected child content; evaluate against child ADR-0003 rather than copying it |
-| 9 | `5632f8d` | Adopt solo-friendly defaults | Compare with the existing child override; do not erase Terraform-required checks |
-| 10 | `4035dbd` | Add inheritance contract validation | The child bootstrap may already match; trust planner classification |
-| 11 | `1e99d39` | Add next-parent planner | The child bootstrap may already match; trust planner classification |
-| 12 | `9ab0600` | Add governance template profile chain | Verify direct-parent ownership and downstream `secure-ga4-bq-template` effects |
+None at the recorded checkpoint. Re-run the read-only planner after refreshing the parent
+checkout; do not infer future parent commits from this document.
 
 ## Approval boundaries and open decisions
 
-- Continue read-only inheritance PRs without GitHub setting writes or GCP operations.
-- Do not execute governance `apply` merely because the command is available. First present
-  its target, ordered actions, side effects, and the `scan` resolution; obtain explicit
-  human approval for that specific write execution.
-- Issue #2 acceptance checkboxes are not yet updated. Update or close the issue only
-  after the parent queue is accepted and the separately approved live reconciliation is
-  read back successfully, or after the owner narrows the issue scope.
-- Before propagation to `secure-ga4-bq-template`, complete this direct-child proof and
-  review that repository's protected paths and required-check profile independently.
+- Read-only validation, planning, and GitHub discovery are allowed.
+- Do not execute governance `apply` without a separately presented target, ordered
+  actions, side effects, and explicit owner approval for that exact write.
+- Do not run Terraform `apply`, create a bucket, or create any GCP resource for this work.
+- Do not suppress GCP-0076 merely to make an IaC-changing PR green.
+- Update or close Issue #2 only after the accepted workflow/profile sequence and any
+  separately approved live reconciliation are verified, or after the owner narrows scope.
 
 ## Verified restart commands
 
@@ -158,10 +132,11 @@ git pull --ff-only origin main
 python3 scripts/template_inheritance.py validate --root .
 python3 scripts/template_inheritance.py plan --root . --parent-root ../ai-dev-foundation
 python3 scripts/github_governance.py validate --root .
+python3 scripts/github_governance.py plan --root . \
+  --repo Yukihide-Mitsuoka/terraform-gcp-template
 ```
 
-The synchronization commands were run successfully on 2026-07-16 before this document
-branch was created; `git pull` fast-forwarded main to PR #18. The three Python commands
-were also verified against the merged content. The GET-only governance `plan` was refreshed
-after PR #18 and produced the external state recorded above. The inheritance planner
-performs no fetch, so refreshing the parent repository is a separate deliberate action.
+The inheritance commands and governance validation were verified on 2026-07-16 after
+PR #27. The GET-only governance plan produced the external state recorded above. The
+inheritance planner performs no fetch; refreshing the parent checkout is a separate
+deliberate action.
