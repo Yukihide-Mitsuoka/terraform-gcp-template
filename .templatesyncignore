@@ -45,3 +45,7 @@ infra/**
 .github/workflows/ci.yml
 .github/workflows/iac.yml
 .github/workflows/security.yml
+
+docs/**
+!docs/foundation/
+!docs/foundation/**
