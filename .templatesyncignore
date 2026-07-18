@@ -47,5 +47,5 @@ infra/**
 .github/workflows/security.yml
 
 docs/**
-!docs/foundation/
-!docs/foundation/**
+:!docs/foundation/
+:!docs/foundation/**
