@@ -39,7 +39,8 @@
     "LICENSE",
     "SECURITY.md",
     "renovate.json",
-    "scripts/"
+    "scripts/",
+    "docs/foundation/"
   ],
   "protected_paths": [
     ".ai/architecture.md",
@@ -77,10 +78,12 @@
     "CLAUDE.md",
     "Makefile",
     "README.md",
-    "docs/",
     "infra/",
     "profiles/",
     "src/",
-    "tests/"
+    "tests/",
+    "docs/README.md",
+    "docs/adr/",
+    "docs/handoff.md"
   ]
 }
