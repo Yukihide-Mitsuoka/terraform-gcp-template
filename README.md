@@ -28,7 +28,7 @@ ai-dev-foundation ──sync──▶ terraform-gcp-template ──sync──▶
 
 | Addition | Location |
 |----------|----------|
-| Terraform root-config layout (per-env) | [`infra/envs/`](infra/) with a worked `dev` example referencing the module library pinned at `?ref=v0.1.0` |
+| Terraform root-config layout (per-env) | [`infra/envs/`](infra/) with a worked `dev` example referencing the module library pinned at `?ref=v0.5.0` |
 | Canonical Makefile wired for this layout | [`Makefile`](Makefile) — fmt/lint/validate/test over `infra/`; `plan ENV=<env>`; heavier layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
 | Terraform gitignore/state hygiene | `.gitignore` |
 
