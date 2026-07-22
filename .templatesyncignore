@@ -1,5 +1,6 @@
 # Legacy Template Sync remains non-authoritative during manifest migration. Keep every
-# manifest-protected path out of that transport as well.
+# manifest-protected path out of that transport and port executable workflow changes
+# through separately reviewed PRs (ADR-0007).
 src/**
 tests/**
 docs/**
@@ -34,6 +35,7 @@ Makefile
 .github/governance/repository.json
 .github/inheritance/lock.json
 .github/inheritance/manifest.json
+.github/workflows/**
 .templatesyncignore
 
 # terraform-gcp-template additions: never let the ai-dev-foundation sync touch the
