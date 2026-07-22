@@ -2,7 +2,7 @@
 id: project-handoff
 title: Template Inheritance Handoff
 status: active
-updated: 2026-07-16
+updated: 2026-07-23
 ---
 
 # Template Inheritance Handoff
@@ -17,22 +17,21 @@ changes. Architectural decisions remain in ADRs and the append-only decision log
 | Item | Verified state |
 |------|----------------|
 | Child repository | `Yukihide-Mitsuoka/terraform-gcp-template` |
-| Child baseline | `main` at PR #29 merge commit `6763ef4ed0232038b684820744241d8e9807f5aa` |
-| Last completed change | [PR #29](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/29), added the child-owned `terraform-gcp` governance profile |
-| Accepted parent lock | `9ab06004ed129d0d27e4a1876aa03b04d067cc71` |
-| Parent target | Same commit; the read-only planner reports `up_to_date` |
-| Work in progress | None in this repository; local Issue #2 implementation is complete |
-| Open child issues | Issue #2 only |
+| Child baseline | `main` at PR #57 merge commit `de7df1b760534644eb97b9bdd10ab72adb5f665c` |
+| Last completed change | [PR #57](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/57), adopted ruleset-only governance discovery |
+| Accepted parent lock | `01eb97c6a7fd8106bada2be835803b49f56dce10` |
+| Parent target | `937baa4e04d0bbe451c8bf04f5619db8bd3f5db0`; the next reviewed candidate is `f21dd13ae2a39210f4cbdc407dbcd323d2bd1ff1` |
+| Work in progress | Repository-maintenance PRs are review-gated; no cloud work is active |
+| Open child issues | See GitHub Issues; completed governance migration Issue #2 is closed |
 | Cloud state | No GCP resource is required or was created by this work |
 
-The merged `main` baseline, profile resolution, and external check observation were
-verified on 2026-07-16. No GitHub repository setting was changed, and Terraform was not
-run against GCP.
+The merged `main` baseline and read-only inheritance plan were verified on 2026-07-23.
+No GitHub repository setting was changed, and Terraform was not run against GCP.
 
 ## Completed capability
 
-- The direct-parent inheritance contract is synchronized through parent commit
-  `9ab0600`; there is no remaining parent queue at this checkpoint.
+- The direct-parent inheritance contract is accepted through parent commit
+  `01eb97c`; later parent commits remain a reviewed queue starting at `f21dd13a`.
 - The governance resolver composes foundation, profile-chain, and repository checks in
   monotonic order with stable deduplication.
 - PR #28 and its resulting `main` push both reported a successful job named exactly
@@ -62,15 +61,15 @@ and automatic merged-branch deletion. Removing its duplicated foundation checks 
 remove them from the resolved policy.
 
 The profile directory is protected from `ai-dev-foundation` inheritance and legacy
-template sync because it is declared by this Terraform template family. When
-`secure-ga4-bq-template` migrates to this repository as its direct parent, that
-downstream manifest must classify the same directory as inherited. The profile does not
-exist in or propagate to `nextjs-saas-template`.
+template sync because it is declared by this Terraform template family. Downstream
+direct children classify the same directory as inherited. The profile does not exist in
+or propagate to `nextjs-saas-template`.
 
-## Current external governance state
+## Last recorded external governance evidence
 
 A GET-only `plan` from merged `main` on 2026-07-16 returned `status: drift` and
-no `unknown` controls:
+no `unknown` controls. This is historical evidence, not a current-state assertion;
+run a fresh GET-only plan before making a governance decision:
 
 | State | Controls |
 |-------|----------|
@@ -85,31 +84,36 @@ This is evidence only. No write action from the plan is authorized by this docum
 
 ## Next recommended task
 
-The local Issue #2 implementation is complete. Next:
+The governance migration and downstream direct-parent migration are complete. Next:
 
-1. After this evidence-only document update merges, the owner may close Issue #2 as an
-   implementation task without claiming that live governance drift was reconciled.
-2. Migrate `secure-ga4-bq-template` to this repository as its direct parent in small,
-   reviewed PRs. Inspect its protected paths before inheriting the Terraform profile.
-3. Keep any live governance reconciliation as a separately presented and explicitly
-   approved action with target, ordered writes, and side effects.
+1. Review the parent candidate `f21dd13a` independently. The read-only planner reports
+   one foundation ADR addition and one ADR index update; do not jump directly to the
+   later parent target.
+2. After each accepted parent checkpoint, propagate reviewed changes to
+   `secure-ga4-bq-template` and `secure-ai-controls` through their own PRs.
+3. Keep protected workflows repository-owned and keep any live governance
+   reconciliation as a separately presented, explicitly approved action with target,
+   ordered writes, and side effects.
 
-Do not change `nextjs-saas-template` as part of the Terraform downstream migration. It
-remains a separate direct child of `ai-dev-foundation` and resolves no Terraform profile.
+`nextjs-saas-template` remains a separate direct child of `ai-dev-foundation` and
+resolves no Terraform profile.
 
 ### Merged-main evidence
 
 - `make test-unit`: three governance tests and four workflow tests passed.
-- Inheritance `validate` passed and `plan` reported `up_to_date` at `9ab0600`.
+- On 2026-07-23, inheritance `plan` selected `f21dd13a` as the next candidate from
+  lock `01eb97c` toward parent target `937baa4`.
 - Governance `validate` loaded exactly one `terraform-gcp` profile.
 - The GET-only plan reported `branch.required_status_checks_observed` compliant for all
   ten resolved checks and returned no `unknown` controls.
-- The `main` IaC workflow completed successfully at merge commit `6763ef4`.
+- PR #57 and its resulting `main` baseline completed the ruleset-only discovery
+  migration at merge commit `de7df1b`.
 
 ## Remaining parent queue
 
-None at the recorded checkpoint. Re-run the read-only planner after refreshing the parent
-checkout; do not infer future parent commits from this document.
+The read-only planner reports candidate `f21dd13a` between accepted lock `01eb97c` and
+target `937baa4`. Re-run the planner after every reviewed merge; do not infer or skip
+future parent commits from this document.
 
 ## Approval boundaries and open decisions
 
@@ -118,8 +122,8 @@ checkout; do not infer future parent commits from this document.
   actions, side effects, and explicit owner approval for that exact write.
 - Do not run Terraform `apply`, create a bucket, or create any GCP resource for this work.
 - Do not suppress GCP-0076 merely to make an IaC-changing PR green.
-- Closing Issue #2 may represent implementation completion only; do not imply that live
-  GitHub drift was reconciled.
+- Closing Issue #2 represents implementation completion only; it does not imply that
+  live GitHub drift was reconciled.
 
 ## Verified restart commands
 
@@ -133,7 +137,6 @@ python3 scripts/github_governance.py plan --root . \
   --repo Yukihide-Mitsuoka/terraform-gcp-template
 ```
 
-The inheritance commands, profile validation, GET-only governance plan, and `main`
-workflow run were verified on 2026-07-16 at merge commit `6763ef4`. The inheritance
-planner performs no fetch; refreshing the parent checkout is a separate deliberate
-action.
+The inheritance planner was verified on 2026-07-23 at merge commit `de7df1b` against
+parent target `937baa4`. The planner performs no fetch; refreshing the parent checkout
+is a separate deliberate action.
