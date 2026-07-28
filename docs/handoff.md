@@ -19,7 +19,7 @@ changes. Architectural decisions remain in ADRs and the append-only decision log
 | Child repository | `Yukihide-Mitsuoka/terraform-gcp-template` |
 | Child baseline | `main` at PR #57 merge commit `de7df1b760534644eb97b9bdd10ab72adb5f665c` |
 | Last completed change | [PR #57](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/pull/57), adopted ruleset-only governance discovery |
-| Accepted parent lock | `01eb97c6a7fd8106bada2be835803b49f56dce10` |
+| Accepted parent lock | `ada82ed598a68d36d6419985a64e31e876996bd8` |
 | Parent target | `937baa4e04d0bbe451c8bf04f5619db8bd3f5db0`; the next reviewed candidate is `f21dd13ae2a39210f4cbdc407dbcd323d2bd1ff1` |
 | Work in progress | Repository-maintenance PRs are review-gated; no cloud work is active |
 | Open child issues | See GitHub Issues; completed governance migration Issue #2 is closed |
