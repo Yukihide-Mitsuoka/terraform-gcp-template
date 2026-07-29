@@ -1,5 +1,7 @@
 # terraform-gcp-template
 
+<!-- repository-readme-owner: Yukihide-Mitsuoka/terraform-gcp-template -->
+
 **GCP Terraform starter on the ai-dev-foundation base** — a template repository for
 infrastructure projects where AI agents are the primary developers. It layers a Terraform
 setup on top of everything [ai-dev-foundation](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation)
