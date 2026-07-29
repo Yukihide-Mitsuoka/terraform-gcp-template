@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.0.0...v1.1.0) (2026-07-29)
+
+
+### Features
+
+* **ai:** add context budget engine ([#82](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/82)) ([93a48f4](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/93a48f40e80d2fe24e14d65bdf84929f20626f65))
+* **ai:** audit root README ownership ([#80](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/80)) ([cb7d835](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/cb7d8358e7e283399d0d27ece8511505aa3b08be))
+* **ai:** enforce context budget contract ([#83](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/83)) ([92df8d5](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/92df8d55aecded9216226a7b3079030fac1dc0b9))
+
 ## 1.0.0 (2026-07-28)
 
 
