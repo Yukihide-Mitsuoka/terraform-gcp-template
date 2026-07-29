@@ -15,6 +15,7 @@ Makefile
 .ai/coding-rules.md
 .ai/mission.md
 .ai/decision-log.md
+.ai/project/**
 .ai/guardrails.md
 .ai/review-checklist.md
 .ai/workflow.md
@@ -36,6 +37,7 @@ Makefile
 .github/governance/repository.json
 .github/inheritance/lock.json
 .github/inheritance/manifest.json
+.github/inheritance/agent-profile.json
 .github/workflows/**
 .templatesyncignore
 
