@@ -8,6 +8,8 @@ ROOT = Path(__file__).parents[2]
 MANIFEST = ROOT / ".github/inheritance/manifest.json"
 PROFILE = ROOT / ".github/inheritance/agent-profile.json"
 PROJECT_OVERLAY = ROOT / ".ai/project/agent-overlay.md"
+CLAUDE_ADAPTER = ROOT / "CLAUDE.md"
+AGENT_ADAPTER = ROOT / "AGENTS.md"
 MODULE_PATH = ROOT / "scripts/template_inheritance.py"
 SPEC = importlib.util.spec_from_file_location("template_inheritance", MODULE_PATH)
 inheritance = importlib.util.module_from_spec(SPEC)
@@ -71,6 +73,46 @@ class InheritanceOwnershipTest(unittest.TestCase):
             result["agent_contract"]["authority_policy"], "strengthen-only"
         )
         self.assertEqual(result["agent_contract"]["inputs"], EXPECTED_AGENT_INPUTS)
+
+    def test_entry_adapters_are_thin_identity_free_and_profile_driven(self):
+        claude = CLAUDE_ADAPTER.read_text(encoding="utf-8")
+        agents = AGENT_ADAPTER.read_text(encoding="utf-8")
+        agents_normalized = " ".join(agents.split())
+
+        self.assertLessEqual(len(claude.splitlines()), 50)
+        for required in (
+            ".github/inheritance/agent-profile.json",
+            "strengthen-only",
+            "inputs[].path",
+            "listed order",
+            "must not recursively",
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, claude)
+        for identity in (
+            "{{PROJECT_NAME}}",
+            "{{STACK}}",
+            "Yukihide-Mitsuoka/terraform-gcp-template",
+            "Terraform on GCP",
+        ):
+            with self.subTest(identity=identity):
+                self.assertNotIn(identity, claude)
+        self.assertIn("CLAUDE.md", agents)
+        self.assertIn("explicit agent profile", agents_normalized)
+
+    def test_project_overlay_contains_only_terraform_repository_facts(self):
+        overlay = PROJECT_OVERLAY.read_text(encoding="utf-8")
+
+        self.assertIn("Yukihide-Mitsuoka/terraform-gcp-template", overlay)
+        self.assertIn("Terraform on Google Cloud", overlay)
+        for reusable_or_legacy_content in (
+            "remain the active agent entry",
+            ".ai/workflow.md",
+            "make ",
+            "Stop and ask",
+        ):
+            with self.subTest(content=reusable_or_legacy_content):
+                self.assertNotIn(reusable_or_legacy_content, overlay)
 
 
 if __name__ == "__main__":

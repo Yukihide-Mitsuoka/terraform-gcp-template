@@ -8,8 +8,7 @@ read_when: [agent-entry]
 # Terraform GCP Template Agent Overlay
 
 This protected project layer contains repository identity and stack facts only. The
-current `CLAUDE.md`, `AGENTS.md`, and `.skills/` files remain the active agent entry
-during the ADR-0014 proving slice.
+explicit agent profile loads it after the inherited foundation contract.
 
 - Repository: `Yukihide-Mitsuoka/terraform-gcp-template`.
 - Role: reusable Terraform template for Google Cloud projects.
