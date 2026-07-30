@@ -77,6 +77,7 @@ class InheritanceOwnershipTest(unittest.TestCase):
     def test_entry_adapters_are_thin_identity_free_and_profile_driven(self):
         claude = CLAUDE_ADAPTER.read_text(encoding="utf-8")
         agents = AGENT_ADAPTER.read_text(encoding="utf-8")
+        agents_normalized = " ".join(agents.split())
 
         self.assertLessEqual(len(claude.splitlines()), 50)
         for required in (
@@ -97,7 +98,7 @@ class InheritanceOwnershipTest(unittest.TestCase):
             with self.subTest(identity=identity):
                 self.assertNotIn(identity, claude)
         self.assertIn("CLAUDE.md", agents)
-        self.assertIn("explicit agent profile", agents)
+        self.assertIn("explicit agent profile", agents_normalized)
 
     def test_project_overlay_contains_only_terraform_repository_facts(self):
         overlay = PROJECT_OVERLAY.read_text(encoding="utf-8")

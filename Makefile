@@ -1,4 +1,4 @@
-# Canonical command interface (CLAUDE.md §11) wired for this template's layout:
+# Canonical command interface from the loaded foundation contract, wired for this layout:
 # root configs under infra/envs/<env>/ that reference modules from
 # github.com/Yukihide-Mitsuoka/terraform-gcp-modules pinned by tag (?ref=vX.Y.Z).
 # The heavier layered-foundations reference stays available in profiles/terraform-gcp/.
