@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-07-30 | LOG-0029 | 直接親lockを`6698135`から次のfirst-parent commit `d916258`（ai-dev-foundation #122）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0028 | 受理済みADR-0014のmigrate段階として、保護された`CLAUDE.md`をidentity-freeな薄いadapterへ切り替え、既存の明示的profileでfoundation contractの後にTerraform固有project overlayを読み込む。profile順序・継承所有境界・workflow・lock・Terraform/GCP状態は変更しない | [Issue #94](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/94) |
 | 2026-07-30 | LOG-0027 | ADR-0014の直接子proving sliceとしてmanifest v2を有効化し、継承されたidentity-freeなfoundation contractの後に保護されたTerraform固有project overlayを`strengthen-only`で宣言する。既存の`CLAUDE.md`、`AGENTS.md`、skillsは引き続き入口とし、grandchild・workflow・GCP設定は変更しない | [Issue #88](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/88) |
 | 2026-07-22 | LOG-0026 | 直接親lockを `86eb924` から次のfirst-parentコミット `01eb97c`（ai-dev-foundation #57）へ進め、Rulesetのみで保護されたbranchの旧Branch Protection 404を管理権限確認時だけ「不存在」と判定する修正・回帰テスト・runbookを正確に取り込む。権限・通信の曖昧さは引き続きfail-closed `unknown` とする | [Issue #56](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation/issues/56) |
