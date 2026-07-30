@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.1.0...v1.2.0) (2026-07-30)
+
+
+### Features
+
+* **inheritance:** prove manifest v2 agent profile ([#90](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/90)) ([1c13ce6](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/1c13ce6fe8609531816a8f86e8cfcbdb9e4bac0f))
+
 ## [1.1.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.0.0...v1.1.0) (2026-07-29)
 
 
