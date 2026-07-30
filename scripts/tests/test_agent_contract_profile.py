@@ -16,6 +16,22 @@ PROJECT = "acme/product"
 COMMIT = "a" * 40
 PROFILE_PATH = ".github/inheritance/agent-profile.json"
 FOUNDATION_ENTRY_PATH = ".ai/contracts/foundation/agent-entry.md"
+REPOSITORY_ROOT = Path(__file__).parents[2]
+FOUNDATION_README_OWNER = (
+    "<!-- repository-readme-owner: Yukihide-Mitsuoka/ai-dev-foundation -->"
+)
+FOUNDATION_ROOT_INPUTS = [
+    {
+        "layer": "foundation",
+        "repository": "Yukihide-Mitsuoka/ai-dev-foundation",
+        "path": FOUNDATION_ENTRY_PATH,
+    },
+    {
+        "layer": "project",
+        "repository": "Yukihide-Mitsuoka/ai-dev-foundation",
+        "path": ".ai/project/agent-overlay.md",
+    },
+]
 REQUIRED_PROTECTED = [
     ".gitignore",
     ".github/governance/repository.json",
@@ -26,6 +42,14 @@ REQUIRED_PROTECTED = [
     ".templatesyncignore",
     ".ai/project/",
 ]
+
+
+def is_canonical_foundation_root(root):
+    """Identify the canonical root without using its descendant-owned profile."""
+    readme = root / "README.md"
+    return readme.is_file() and FOUNDATION_README_OWNER in readme.read_text(
+        encoding="utf-8"
+    )
 
 
 def profile_input(layer, repository, path):
@@ -87,6 +111,19 @@ class AgentContractProfileTest(unittest.TestCase):
 
         self.assertEqual(result["agent_contract"]["inputs"], inputs)
         self.assertEqual(result["agent_contract"]["authority_policy"], "strengthen-only")
+
+    def test_descendant_root_is_not_canonical_foundation(self):
+        inputs = [
+            profile_input(
+                "foundation", FOUNDATION, ".ai/contracts/foundation/agent-entry.md"
+            ),
+            profile_input("project", PROJECT, ".ai/project/agent-overlay.md"),
+        ]
+        self.write_contract(parent=FOUNDATION, inputs=inputs)
+        self.write("README.md", "<!-- repository-readme-owner: acme/product -->\n")
+        self.write("CLAUDE.md", "# Compatibility entry\n\nProject-specific entry.\n")
+
+        self.assertFalse(is_canonical_foundation_root(self.root))
 
     def test_multi_level_child_preserves_parent_to_child_template_order(self):
         inputs = [
@@ -195,6 +232,7 @@ class FoundationAgentEntryTest(unittest.TestCase):
 
         self.assertTrue(entry_path.is_file(), f"missing {FOUNDATION_ENTRY_PATH}")
         content = entry_path.read_text(encoding="utf-8")
+        normalized_content = " ".join(content.split())
         for project_identity in (
             "{{PROJECT_NAME}}",
             "{{STACK}}",
@@ -205,16 +243,102 @@ class FoundationAgentEntryTest(unittest.TestCase):
         for required_reference in (
             ".ai/guardrails.md",
             ".ai/README.md",
+            ".ai/workflow.md",
+            ".ai/review-checklist.md",
             "docs/development-handoff.md",
+            "profiles/README.md",
+            ".claude/README.md",
+            "AGENTS.md",
+            "Conventional Commits",
+            "SemVer",
+            "WF-090",
+            "authentication",
+            "payments",
+            "data deletion",
+            "production configuration",
+            "spending money",
+            "make setup",
             "make format",
             "make lint",
+            "make test",
+            "make test-unit",
+            "make test-integration",
+            "make coverage",
+            "make build",
+            "make run",
+            "make security-scan",
+            "make sbom",
+            "make clean",
+            "make doctor",
             "foundation",
             "template",
             "project",
             "strengthen-only",
         ):
             with self.subTest(required_reference=required_reference):
-                self.assertIn(required_reference, content)
+                self.assertIn(required_reference, normalized_content)
+
+
+@unittest.skipUnless(
+    is_canonical_foundation_root(REPOSITORY_ROOT),
+    "canonical ai-dev-foundation root assertions",
+)
+class FoundationRootAgentAdapterTest(unittest.TestCase):
+    def test_profile_orders_foundation_then_project(self):
+        profile_path = REPOSITORY_ROOT / PROFILE_PATH
+        self.assertTrue(profile_path.is_file(), f"missing {PROFILE_PATH}")
+        profile = json.loads(profile_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(profile["schema_version"], 1)
+        self.assertEqual(profile["authority_policy"], "strengthen-only")
+        self.assertEqual(profile["inputs"], FOUNDATION_ROOT_INPUTS)
+        for item in profile["inputs"]:
+            with self.subTest(path=item["path"]):
+                self.assertTrue((REPOSITORY_ROOT / item["path"]).is_file())
+
+    def test_adapters_are_small_identity_free_and_bounded(self):
+        adapters = {
+            "CLAUDE.md": 50,
+            "AGENTS.md": 30,
+        }
+        for path, maximum_lines in adapters.items():
+            with self.subTest(path=path):
+                content = (REPOSITORY_ROOT / path).read_text(encoding="utf-8")
+                self.assertLessEqual(len(content.splitlines()), maximum_lines)
+                for identity in (
+                    "{{PROJECT_NAME}}",
+                    "{{STACK}}",
+                    "Yukihide-Mitsuoka",
+                    "ai-dev-foundation",
+                    "Terraform on GCP",
+                ):
+                    self.assertNotIn(identity, content)
+
+        claude = (REPOSITORY_ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn(PROFILE_PATH, claude)
+        self.assertIn("strengthen-only", claude)
+        self.assertIn("listed order", claude)
+        self.assertIn("must not recursively", claude)
+        agents = (REPOSITORY_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("CLAUDE.md", agents)
+
+    def test_project_overlay_contains_facts_not_reusable_workflow(self):
+        overlay = REPOSITORY_ROOT / FOUNDATION_ROOT_INPUTS[-1]["path"]
+        self.assertTrue(overlay.is_file())
+        content = overlay.read_text(encoding="utf-8")
+        self.assertIn("Yukihide-Mitsuoka/ai-dev-foundation", content)
+        self.assertIn("stack-agnostic", content)
+        for reusable_rule in (".ai/workflow.md", "make ", "Stop and ask"):
+            self.assertNotIn(reusable_rule, content)
+
+    def test_profile_and_project_overlay_are_template_sync_protected(self):
+        ignore_entries = set(
+            (REPOSITORY_ROOT / ".templatesyncignore")
+            .read_text(encoding="utf-8")
+            .splitlines()
+        )
+        self.assertIn(PROFILE_PATH, ignore_entries)
+        self.assertIn(".ai/project/**", ignore_entries)
 
 
 if __name__ == "__main__":
