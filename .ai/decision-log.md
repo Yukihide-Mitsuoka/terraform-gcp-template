@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-07-30 | LOG-0031 | 直接親lockを`a9711f8`から次のfirst-parent commit `edbbff6`（ai-dev-foundation #126）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0030 | 直接親lockを`d916258`から次のfirst-parent commit `a9711f8`（ai-dev-foundation #125）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0029 | 直接親lockを`6698135`から次のfirst-parent commit `d916258`（ai-dev-foundation #122）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0028 | 受理済みADR-0014のmigrate段階として、保護された`CLAUDE.md`をidentity-freeな薄いadapterへ切り替え、既存の明示的profileでfoundation contractの後にTerraform固有project overlayを読み込む。profile順序・継承所有境界・workflow・lock・Terraform/GCP状態は変更しない | [Issue #94](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/94) |
