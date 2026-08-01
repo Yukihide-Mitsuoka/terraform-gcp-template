@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -29,13 +28,6 @@ LOCKFILE_NAMES = frozenset(
         "uv.lock",
         "yarn.lock",
     }
-)
-TARGET_REPOSITORY = "Yukihide-Mitsuoka/terraform-gcp-template"
-DIRECT_PARENT_REPOSITORY = "Yukihide-Mitsuoka/ai-dev-foundation"
-TEMPLATE_SYNC_BRANCH = re.compile(r"chore/template_sync_[0-9a-f]{7,40}\Z")
-DIRECT_PARENT_SOURCE = re.compile(
-    rf"^Direct-parent-source: https://github\.com/{DIRECT_PARENT_REPOSITORY}@[0-9a-f]{{40}}$",
-    re.MULTILINE,
 )
 
 
@@ -81,34 +73,11 @@ def summarize_lockfiles(payload: Any) -> tuple[int, int, int]:
     return additions, deletions, files
 
 
-def is_authenticated_template_sync(
-    *,
-    pr_author: str,
-    head_repository: str,
-    target_repository: str,
-    head_ref: str,
-    base_ref: str,
-    pr_body: str,
-) -> bool:
-    """Return true only for a same-repository sync with exact parent provenance."""
-    return all(
-        (
-            pr_author == "github-actions[bot]",
-            target_repository == TARGET_REPOSITORY,
-            head_repository == target_repository,
-            TEMPLATE_SYNC_BRANCH.fullmatch(head_ref) is not None,
-            base_ref == "main",
-            DIRECT_PARENT_SOURCE.search(pr_body) is not None,
-        )
-    )
-
-
 def evaluate_size(
     additions: int,
     deletions: int,
     files: int,
     lockfile_stats: tuple[int, int, int],
-    authenticated_template_sync: bool = False,
 ) -> SizeResult:
     additions = _nonnegative_integer(additions, "additions")
     deletions = _nonnegative_integer(deletions, "deletions")
@@ -126,9 +95,7 @@ def evaluate_size(
 
     changed_lines = additions - lock_additions + deletions - lock_deletions
     changed_files = files - lock_files
-    if (changed_lines > 800 or changed_files > 20) and authenticated_template_sync:
-        level = "mechanical"
-    elif changed_lines > 800 or changed_files > 20:
+    if changed_lines > 800 or changed_files > 20:
         level = "hard"
     elif changed_lines > 400 or changed_files > 10:
         level = "soft"
@@ -143,31 +110,11 @@ def main() -> int:
     parser.add_argument("--additions", required=True, type=int)
     parser.add_argument("--deletions", required=True, type=int)
     parser.add_argument("--files", required=True, type=int)
-    parser.add_argument("--pr-author", required=True)
-    parser.add_argument("--head-repository", required=True)
-    parser.add_argument("--target-repository", required=True)
-    parser.add_argument("--head-ref", required=True)
-    parser.add_argument("--base-ref", required=True)
-    parser.add_argument("--pr-body", required=True)
     args = parser.parse_args()
     try:
         with args.files_json.open(encoding="utf-8") as source:
             lockfile_stats = summarize_lockfiles(json.load(source))
-        authenticated_sync = is_authenticated_template_sync(
-            pr_author=args.pr_author,
-            head_repository=args.head_repository,
-            target_repository=args.target_repository,
-            head_ref=args.head_ref,
-            base_ref=args.base_ref,
-            pr_body=args.pr_body,
-        )
-        result = evaluate_size(
-            args.additions,
-            args.deletions,
-            args.files,
-            lockfile_stats,
-            authenticated_sync,
-        )
+        result = evaluate_size(args.additions, args.deletions, args.files, lockfile_stats)
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"::error::Invalid PR-size policy input: {error}")
         return 2
@@ -182,11 +129,6 @@ def main() -> int:
             "(soft limit 400 lines/10 files, hard 800/20)."
         )
         return 1
-    if result.level == "mechanical":
-        print(
-            "::warning::Authenticated mechanical Template Sync exceeds the numeric "
-            "GR-020 limit; human review and every other required check remain mandatory."
-        )
     if result.level == "soft":
         print(
             "::warning::PR exceeds the GR-020 soft limit — must be justified "
