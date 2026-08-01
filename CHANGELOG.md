@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.0...v1.3.1) (2026-08-01)
+
+
+### Bug Fixes
+
+* **ci:** authenticate oversized template syncs ([#111](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/111)) ([85906c1](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/85906c10cff49b4f18b1719e88b808aa62d687d3)), closes [#110](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/110)
+* **ci:** isolate project size policy ([#115](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/115)) ([ca1e08d](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/ca1e08d14a0c34339f75d423eed357961705be0d)), closes [#114](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/114)
+
 ## [1.3.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.2.0...v1.3.0) (2026-08-01)
 
 
