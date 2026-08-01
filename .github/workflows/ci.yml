@@ -103,7 +103,7 @@ jobs:
           gh api --paginate --slurp \
             "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" \
             > "${RUNNER_TEMP}/pr-files.json"
-          python3 scripts/pr_size_policy.py \
+          python3 src/ci/pr_size_policy.py \
             --files-json "${RUNNER_TEMP}/pr-files.json" \
             --additions "${ADDITIONS}" \
             --deletions "${DELETIONS}" \
