@@ -17,7 +17,6 @@ Makefile
 .ai/decision-log.md
 .ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/**
 .ai/project/**
-.ai/guardrails.md
 .ai/review-checklist.md
 .ai/workflow.md
 .claude/hooks/guard-bash.sh
