@@ -6,6 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[2]
 MANIFEST = ROOT / ".github/inheritance/manifest.json"
+IGNORE = ROOT / ".templatesyncignore"
+BUGFIX_SKILL = ROOT / ".skills/bugfix.skill.md"
 PROFILE = ROOT / ".github/inheritance/agent-profile.json"
 PROJECT_OVERLAY = ROOT / ".ai/project/agent-overlay.md"
 TEMPLATE_OVERLAY = (
@@ -45,6 +47,24 @@ class InheritanceOwnershipTest(unittest.TestCase):
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.manifest["inherited_paths"])
+
+    def test_foundation_bugfix_skill_is_inherited_and_transportable(self):
+        path = ".skills/bugfix.skill.md"
+        ignored = {
+            line.strip()
+            for line in IGNORE.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        }
+        skill = BUGFIX_SKILL.read_text(encoding="utf-8")
+
+        self.assertIn(path, self.manifest["inherited_paths"])
+        self.assertNotIn(path, self.manifest["protected_paths"])
+        self.assertNotIn(path, ignored)
+        self.assertIn("Sweep for siblings", skill)
+        self.assertIn("Sibling occurrences searched; results reported", skill)
+        for trigger in ("バグ修正", "不具合修正", "バグ", "障害"):
+            with self.subTest(trigger=trigger):
+                self.assertIn(trigger, skill)
 
     def test_repository_changelog_is_protected(self):
         self.assertIn("CHANGELOG.md", self.manifest["protected_paths"])
