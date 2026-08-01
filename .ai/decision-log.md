@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-08-01 | LOG-0034 | 受理済みADR-0014の多段継承migrate段階として、Terraform familyが直接子へ意図的に渡すstack・module pin・`iac-scan`・実行境界だけをowner-qualified template overlayで公開する。このexportはai-dev-foundation同期から保護し、terraform-gcp-template自身のproject identityや子のlocal exceptionを含めない | [Issue #102](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/102) |
 | 2026-08-01 | LOG-0033 | 直接親lockを`db11be9`から最終first-parent commit `e658ffa`（ai-dev-foundation #129）へ進める。継承blobはPR #93で、保護されたTerraform adapterはPR #95で受理済みで、保護対象`CHANGELOG.md`はTerraform側のリリース履歴を維持するため、lockだけを最終受理commitに合わせる | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0032 | 直接親lockを`edbbff6`から次のfirst-parent commit `db11be9`（ai-dev-foundation #128）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |
 | 2026-07-30 | LOG-0031 | 直接親lockを`a9711f8`から次のfirst-parent commit `edbbff6`（ai-dev-foundation #126）へ進める。PR #93で`e658ffa`までの最終的な継承blobを、PR #95で保護されたTerraform adapterを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #96](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/96) |

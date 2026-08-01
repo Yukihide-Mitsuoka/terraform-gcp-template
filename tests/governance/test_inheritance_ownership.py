@@ -8,6 +8,10 @@ ROOT = Path(__file__).parents[2]
 MANIFEST = ROOT / ".github/inheritance/manifest.json"
 PROFILE = ROOT / ".github/inheritance/agent-profile.json"
 PROJECT_OVERLAY = ROOT / ".ai/project/agent-overlay.md"
+TEMPLATE_OVERLAY = (
+    ROOT
+    / ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/agent-overlay.md"
+)
 CLAUDE_ADAPTER = ROOT / "CLAUDE.md"
 AGENT_ADAPTER = ROOT / "AGENTS.md"
 MODULE_PATH = ROOT / "scripts/template_inheritance.py"
@@ -113,6 +117,19 @@ class InheritanceOwnershipTest(unittest.TestCase):
         ):
             with self.subTest(content=reusable_or_legacy_content):
                 self.assertNotIn(reusable_or_legacy_content, overlay)
+
+    def test_owner_qualified_template_overlay_exports_only_family_rules(self):
+        template_root = (
+            ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/"
+        )
+        overlay = TEMPLATE_OVERLAY.read_text(encoding="utf-8")
+
+        self.assertIn(template_root, self.manifest["protected_paths"])
+        self.assertIn("Terraform on Google Cloud", overlay)
+        self.assertIn("iac-scan", overlay)
+        self.assertIn("immutable release tags", overlay)
+        self.assertNotIn("Repository: `Yukihide-Mitsuoka/terraform-gcp-template`", overlay)
+        self.assertNotIn(".ai/project/", overlay)
 
 
 if __name__ == "__main__":

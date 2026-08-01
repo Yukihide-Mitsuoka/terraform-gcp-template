@@ -15,6 +15,7 @@ Makefile
 .ai/coding-rules.md
 .ai/mission.md
 .ai/decision-log.md
+.ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/**
 .ai/project/**
 .ai/guardrails.md
 .ai/review-checklist.md
