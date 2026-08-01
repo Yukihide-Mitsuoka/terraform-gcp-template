@@ -25,7 +25,6 @@ Makefile
 .claude/settings.json
 .devcontainer/**
 .skills/architecture.skill.md
-.skills/bugfix.skill.md
 .skills/documentation.skill.md
 .skills/feature.skill.md
 .skills/refactor.skill.md
