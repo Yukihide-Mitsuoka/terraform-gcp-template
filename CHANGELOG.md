@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.2.0...v1.3.0) (2026-08-01)
+
+
+### Features
+
+* **inheritance:** export Terraform template overlay ([#103](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/103)) ([331a724](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/331a724dc112f9390c3f2d3322394cb6cd133984))
+
+
+### Bug Fixes
+
+* **inheritance:** inherit foundation bugfix skill ([#107](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/107)) ([6864b33](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/6864b33889da80122f6dab4e4c5ebd5f2433007a))
+
 ## [1.2.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.1.0...v1.2.0) (2026-07-30)
 
 
