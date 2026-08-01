@@ -1,6 +1,10 @@
 import unittest
 
-from scripts.pr_size_policy import evaluate_size, summarize_lockfiles
+from scripts.pr_size_policy import (
+    evaluate_size,
+    is_authenticated_template_sync,
+    summarize_lockfiles,
+)
 
 
 class PullRequestSizePolicyTests(unittest.TestCase):
@@ -47,6 +51,66 @@ class PullRequestSizePolicyTests(unittest.TestCase):
     def test_preserves_soft_and_hard_limits(self) -> None:
         self.assertEqual(evaluate_size(401, 0, 1, (0, 0, 0)).level, "soft")
         self.assertEqual(evaluate_size(801, 0, 1, (0, 0, 0)).level, "hard")
+
+    def test_authenticated_template_sync_may_exceed_only_numeric_limit(self) -> None:
+        authenticated = is_authenticated_template_sync(
+            pr_author="github-actions[bot]",
+            head_repository="Yukihide-Mitsuoka/terraform-gcp-template",
+            target_repository="Yukihide-Mitsuoka/terraform-gcp-template",
+            head_ref="chore/template_sync_aa217a9",
+            base_ref="main",
+            pr_body=(
+                "Template Sync\n\n"
+                "Direct-parent-source: "
+                "https://github.com/Yukihide-Mitsuoka/ai-dev-foundation@"
+                + "a" * 40
+            ),
+        )
+
+        result = evaluate_size(900, 36, 25, (0, 0, 0), authenticated)
+
+        self.assertEqual(result.level, "mechanical")
+
+    def test_template_sync_authentication_fails_closed(self) -> None:
+        valid = {
+            "pr_author": "github-actions[bot]",
+            "head_repository": "Yukihide-Mitsuoka/terraform-gcp-template",
+            "target_repository": "Yukihide-Mitsuoka/terraform-gcp-template",
+            "head_ref": "chore/template_sync_aa217a9",
+            "base_ref": "main",
+            "pr_body": (
+                "Direct-parent-source: "
+                "https://github.com/Yukihide-Mitsuoka/ai-dev-foundation@"
+                + "a" * 40
+            ),
+        }
+        invalid_overrides = (
+            {"pr_author": "maintainer"},
+            {"head_repository": "attacker/fork"},
+            {"target_repository": "attacker/repository"},
+            {"head_ref": "chore/manual-sync_aa217a9"},
+            {"head_ref": "chore/template_sync_abc123"},
+            {"base_ref": "release"},
+            {
+                "pr_body": (
+                    "Direct-parent-source: "
+                    "https://github.com/attacker/foundation@" + "a" * 40
+                )
+            },
+            {
+                "pr_body": (
+                    "Direct-parent-source: "
+                    "https://github.com/Yukihide-Mitsuoka/ai-dev-foundation@"
+                    + "a" * 39
+                )
+            },
+        )
+
+        self.assertTrue(is_authenticated_template_sync(**valid))
+        for override in invalid_overrides:
+            with self.subTest(override=override):
+                candidate = valid | override
+                self.assertFalse(is_authenticated_template_sync(**candidate))
 
 
 if __name__ == "__main__":
