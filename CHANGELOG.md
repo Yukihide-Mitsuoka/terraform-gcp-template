@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.1...v1.3.2) (2026-08-02)
+
+
+### Bug Fixes
+
+* **ci:** call Scorecard directly ([#122](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/122)) ([340752b](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/340752b3ffffcd561e71bc92b0c401d37d903a13)), closes [#121](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/121)
+* **release:** attach SBOM to created release ([#128](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/128)) ([77ddd5b](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/77ddd5bbffa62cf07108a81fe44f403fb73e5462)), closes [#127](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/127)
+
 ## [1.3.1](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.0...v1.3.1) (2026-08-01)
 
 
