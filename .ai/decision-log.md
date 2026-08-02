@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-08-02 | LOG-0039 | 直接親lockを`854b885`から次のfirst-parent commit `919508c`（ai-dev-foundation #149）へ進める。fleet artifactを既存の継承rootへ収める最終内容はPR #119/#120で受理済みであり、保護されたMakefileや中間配置へ戻さず来歴だけを前進させる | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0038 | 直接親lockを`cf4ebed`から次のfirst-parent commit `854b885`（ai-dev-foundation release 1.5.1）へ進める。親差分は保護されたFoundation CHANGELOGだけで、PR #119/#120で受理済みの最終継承blobとPR #122のScorecard workflowを変更せず、来歴だけを順序どおり記録する | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0037 | 直接親lockを`c3b5dbf`から次のfirst-parent commit `cf4ebed`（ai-dev-foundation #147）へ進める。PR #119/#120で`74d9255`までの最終継承blobを、PR #122で保護されたScorecard workflowを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0036 | 受理済み基盤ADR-0014の直接子migrate段階として、`.ai/guardrails.md`を重複した保護対象ルール本文から基盤所有の薄いadapterへ切り替える。正本`contracts/foundation/guardrails.md`を通常同期し、Terraform固有の強化は宣言済みproject/template overlayだけに置き、完全に受理した親commitを`c3b5dbf`へ進める | [Issue #108](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/108) |
