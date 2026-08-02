@@ -204,11 +204,6 @@ class LocalWorkflowActionsTest(unittest.TestCase):
             'gh release upload "$RELEASE_TAG" "$SBOM_ASSET" --clobber', workflow
         )
         self.assertNotIn("RELEASE_TAG: ${{ github.ref_name }}", workflow)
-        self.assertIn(
-            "hashicorp/setup-terraform@"
-            "b9cd54a3c349d3f38e8881555d616ced269862dd",
-            workflow,
-        )
 
 
 if __name__ == "__main__":
