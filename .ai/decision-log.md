@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-08-02 | LOG-0037 | 直接親lockを`c3b5dbf`から次のfirst-parent commit `cf4ebed`（ai-dev-foundation #147）へ進める。PR #119/#120で`74d9255`までの最終継承blobを、PR #122で保護されたScorecard workflowを既に受理済みのため、中間commitの内容へ戻さずlockだけを更新する | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0036 | 受理済み基盤ADR-0014の直接子migrate段階として、`.ai/guardrails.md`を重複した保護対象ルール本文から基盤所有の薄いadapterへ切り替える。正本`contracts/foundation/guardrails.md`を通常同期し、Terraform固有の強化は宣言済みproject/template overlayだけに置き、完全に受理した親commitを`c3b5dbf`へ進める | [Issue #108](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/108) |
 | 2026-08-01 | LOG-0035 | 受理済み基盤ADR-0014に従い、汎用`bugfix` skillをTerraform固有の保護対象から基盤所有の同期対象へ移し、同型バグの周辺探索と日本語トリガーを今後の通常Template Syncで受け取る。Terraform固有の例外は追加せず、所有権・transport・探索契約をproject-ownedテストで固定する | [Issue #106](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/106) |
 | 2026-08-01 | LOG-0034 | 受理済みADR-0014の多段継承migrate段階として、Terraform familyが直接子へ意図的に渡すstack・module pin・`iac-scan`・実行境界だけをowner-qualified template overlayで公開する。このexportはai-dev-foundation同期から保護し、terraform-gcp-template自身のproject identityや子のlocal exceptionを含めない | [Issue #102](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/102) |
