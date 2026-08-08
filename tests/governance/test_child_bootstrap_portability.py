@@ -62,6 +62,11 @@ class ChildBootstrapPortabilityTest(unittest.TestCase):
             "- Stack: Terraform on Google Cloud.\n",
             encoding="utf-8",
         )
+        (self.child / "README.md").write_text(
+            "# Bootstrap Proof\n\n"
+            f"<!-- repository-readme-owner: {CHILD_REPOSITORY} -->\n",
+            encoding="utf-8",
+        )
 
     def tearDown(self):
         self.temporary_directory.cleanup()
