@@ -6,6 +6,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).parents[2]
+TEMPLATE_REPOSITORY = "Yukihide-Mitsuoka/terraform-gcp-template"
 
 
 class TerraformGovernanceProfileTest(unittest.TestCase):
@@ -29,6 +30,11 @@ class TerraformGovernanceProfileTest(unittest.TestCase):
         )
         cls.manifest = json.loads(
             (ROOT / ".github/inheritance/manifest.json").read_text(encoding="utf-8")
+        )
+        cls.agent_profile = json.loads(
+            (ROOT / ".github/inheritance/agent-profile.json").read_text(
+                encoding="utf-8"
+            )
         )
 
     def test_profile_adds_only_the_always_reported_iac_check(self):
@@ -63,10 +69,19 @@ class TerraformGovernanceProfileTest(unittest.TestCase):
     def test_repository_policy_does_not_duplicate_family_checks(self):
         self.assertNotIn("required_checks", self.repository["overrides"])
 
-    def test_profile_directory_is_owned_by_this_template_family(self):
+    def test_profile_directory_ownership_matches_repository_layer(self):
         profile_directory = ".github/governance/profiles/"
-        self.assertIn(profile_directory, self.manifest["protected_paths"])
-        self.assertNotIn(profile_directory, self.manifest["inherited_paths"])
+        current_repository = self.agent_profile["inputs"][-1]["repository"]
+        ownership = (
+            "protected_paths"
+            if current_repository == TEMPLATE_REPOSITORY
+            else "inherited_paths"
+        )
+        other_ownership = (
+            "inherited_paths" if ownership == "protected_paths" else "protected_paths"
+        )
+        self.assertIn(profile_directory, self.manifest[ownership])
+        self.assertNotIn(profile_directory, self.manifest[other_ownership])
 
 
 if __name__ == "__main__":

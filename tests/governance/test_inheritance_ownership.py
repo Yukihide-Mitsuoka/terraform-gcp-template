@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -25,32 +26,60 @@ SPEC = importlib.util.spec_from_file_location("template_inheritance", MODULE_PAT
 inheritance = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(inheritance)
 
-EXPECTED_AGENT_INPUTS = [
-    {
-        "layer": "foundation",
-        "repository": "Yukihide-Mitsuoka/ai-dev-foundation",
-        "path": ".ai/contracts/foundation/agent-entry.md",
-    },
-    {
-        "layer": "project",
-        "repository": "Yukihide-Mitsuoka/terraform-gcp-template",
-        "path": ".ai/project/agent-overlay.md",
-    },
-]
+FOUNDATION_REPOSITORY = "Yukihide-Mitsuoka/ai-dev-foundation"
+TEMPLATE_REPOSITORY = "Yukihide-Mitsuoka/terraform-gcp-template"
+FOUNDATION_INPUT = {
+    "layer": "foundation",
+    "repository": FOUNDATION_REPOSITORY,
+    "path": ".ai/contracts/foundation/agent-entry.md",
+}
+TEMPLATE_INPUT = {
+    "layer": "template",
+    "repository": TEMPLATE_REPOSITORY,
+    "path": ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/agent-overlay.md",
+}
 EXPECTED_EXPORT_INPUTS = [
-    EXPECTED_AGENT_INPUTS[0],
-    {
-        "layer": "template",
-        "repository": "Yukihide-Mitsuoka/terraform-gcp-template",
-        "path": ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/agent-overlay.md",
-    },
+    FOUNDATION_INPUT,
+    TEMPLATE_INPUT,
 ]
+
+
+def readme_owner():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    match = re.search(r"<!-- repository-readme-owner: ([^ ]+) -->", readme)
+    if match is None:
+        raise AssertionError("README repository ownership marker is missing")
+    return match.group(1)
 
 
 class InheritanceOwnershipTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+        cls.repository = readme_owner()
+
+    def expected_agent_inputs(self):
+        inputs = [FOUNDATION_INPUT]
+        for item in self.profile["inputs"][1:-1]:
+            owner, repository = item["repository"].casefold().split("/", 1)
+            inputs.append(
+                {
+                    "layer": "template",
+                    "repository": item["repository"],
+                    "path": (
+                        f".ai/contracts/templates/{owner}/{repository}/agent-overlay.md"
+                    ),
+                }
+            )
+        inputs.append(
+            {
+                "layer": "project",
+                "repository": self.repository,
+                "path": ".ai/project/agent-overlay.md",
+            }
+        )
+        return inputs
 
     def test_shared_ai_contract_files_are_inherited(self):
         for path in (
@@ -84,10 +113,9 @@ class InheritanceOwnershipTest(unittest.TestCase):
 
     def test_manifest_v2_declares_ordered_agent_profile(self):
         self.assertEqual(self.manifest["schema_version"], 2)
-        profile = json.loads(PROFILE.read_text(encoding="utf-8"))
-        self.assertEqual(profile["schema_version"], 1)
-        self.assertEqual(profile["authority_policy"], "strengthen-only")
-        self.assertEqual(profile["inputs"], EXPECTED_AGENT_INPUTS)
+        self.assertEqual(self.profile["schema_version"], 1)
+        self.assertEqual(self.profile["authority_policy"], "strengthen-only")
+        self.assertEqual(self.profile["inputs"], self.expected_agent_inputs())
 
     def test_agent_profile_ownership_is_explicit(self):
         self.assertIn(
@@ -108,7 +136,9 @@ class InheritanceOwnershipTest(unittest.TestCase):
         self.assertEqual(
             result["agent_contract"]["authority_policy"], "strengthen-only"
         )
-        self.assertEqual(result["agent_contract"]["inputs"], EXPECTED_AGENT_INPUTS)
+        self.assertEqual(
+            result["agent_contract"]["inputs"], self.expected_agent_inputs()
+        )
 
     def test_entry_adapters_are_thin_identity_free_and_profile_driven(self):
         claude = CLAUDE_ADAPTER.read_text(encoding="utf-8")
@@ -136,10 +166,10 @@ class InheritanceOwnershipTest(unittest.TestCase):
         self.assertIn("CLAUDE.md", agents)
         self.assertIn("explicit agent profile", agents_normalized)
 
-    def test_project_overlay_contains_only_terraform_repository_facts(self):
+    def test_project_overlay_contains_only_current_repository_facts(self):
         overlay = PROJECT_OVERLAY.read_text(encoding="utf-8")
 
-        self.assertIn("Yukihide-Mitsuoka/terraform-gcp-template", overlay)
+        self.assertIn(self.repository, overlay)
         self.assertIn("Terraform on Google Cloud", overlay)
         for reusable_or_legacy_content in (
             "remain the active agent entry",
@@ -156,7 +186,16 @@ class InheritanceOwnershipTest(unittest.TestCase):
         )
         overlay = TEMPLATE_OVERLAY.read_text(encoding="utf-8")
 
-        self.assertIn(template_root, self.manifest["protected_paths"])
+        ownership = (
+            "protected_paths"
+            if self.repository == TEMPLATE_REPOSITORY
+            else "inherited_paths"
+        )
+        other_ownership = (
+            "inherited_paths" if ownership == "protected_paths" else "protected_paths"
+        )
+        self.assertIn(template_root, self.manifest[ownership])
+        self.assertNotIn(template_root, self.manifest[other_ownership])
         self.assertIn("Terraform on Google Cloud", overlay)
         self.assertIn("iac-scan", overlay)
         self.assertIn("immutable release tags", overlay)
