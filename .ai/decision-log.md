@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-08-08 | LOG-0042 | ADR-0015の新規direct-child bootstrapをTerraform familyへ拡張するため、owner-qualified `inheritance-export.json`でfoundation契約、Terraform template overlay、Terraform governance/profileを継承対象として公開し、workflow caller、repository identity、project overlay、root README、Terraform project code、project docsを子所有として保護する | [Issue #136](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/136) |
 | 2026-08-02 | LOG-0041 | 直接親lockを`ef70594`から最終first-parent commit `74d9255`（ai-dev-foundation release 1.5.2）へ進め、PR #119/#120の継承内容とPR #122の保護workflowに対応する受理来歴を完成させる。子固有CHANGELOG、Terraform設定、GitHub設定、GCP状態は変更しない | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0040 | 直接親lockを`919508c`から次のfirst-parent commit `ef70594`（ai-dev-foundation #152）へ進める。旧Scorecard compositeの削除と回帰テストはPR #120で、保護されたdirect callerはPR #122で受理済みのため、実装を二重化せず受理済み状態の来歴を記録する | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
 | 2026-08-02 | LOG-0039 | 直接親lockを`854b885`から次のfirst-parent commit `919508c`（ai-dev-foundation #149）へ進める。fleet artifactを既存の継承rootへ収める最終内容はPR #119/#120で受理済みであり、保護されたMakefileや中間配置へ戻さず来歴だけを前進させる | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |

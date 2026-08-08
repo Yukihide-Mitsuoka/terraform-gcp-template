@@ -14,6 +14,10 @@ TEMPLATE_OVERLAY = (
     ROOT
     / ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/agent-overlay.md"
 )
+TEMPLATE_EXPORT = (
+    ROOT
+    / ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/inheritance-export.json"
+)
 CLAUDE_ADAPTER = ROOT / "CLAUDE.md"
 AGENT_ADAPTER = ROOT / "AGENTS.md"
 MODULE_PATH = ROOT / "scripts/template_inheritance.py"
@@ -31,6 +35,14 @@ EXPECTED_AGENT_INPUTS = [
         "layer": "project",
         "repository": "Yukihide-Mitsuoka/terraform-gcp-template",
         "path": ".ai/project/agent-overlay.md",
+    },
+]
+EXPECTED_EXPORT_INPUTS = [
+    EXPECTED_AGENT_INPUTS[0],
+    {
+        "layer": "template",
+        "repository": "Yukihide-Mitsuoka/terraform-gcp-template",
+        "path": ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/agent-overlay.md",
     },
 ]
 
@@ -150,6 +162,35 @@ class InheritanceOwnershipTest(unittest.TestCase):
         self.assertIn("immutable release tags", overlay)
         self.assertNotIn("Repository: `Yukihide-Mitsuoka/terraform-gcp-template`", overlay)
         self.assertNotIn(".ai/project/", overlay)
+
+    def test_owner_qualified_bootstrap_export_defines_direct_child_contract(self):
+        export_path = (
+            ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/"
+            "inheritance-export.json"
+        )
+        export = inheritance._validate_bootstrap_export(
+            export_path,
+            json.loads(TEMPLATE_EXPORT.read_text(encoding="utf-8")),
+            "Yukihide-Mitsuoka/terraform-gcp-template",
+        )
+
+        self.assertEqual(export["agent_inputs"], EXPECTED_EXPORT_INPUTS)
+        for inherited in (
+            ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/",
+            ".github/governance/profiles/",
+            "profiles/terraform-gcp/",
+        ):
+            with self.subTest(inherited=inherited):
+                self.assertIn(inherited, export["inherited_paths"])
+        for protected in (
+            ".ai/project/",
+            ".github/workflows/",
+            "README.md",
+            "infra/",
+            "docs/inheritance/readmes/",
+        ):
+            with self.subTest(protected=protected):
+                self.assertIn(protected, export["protected_paths"])
 
 
 if __name__ == "__main__":
