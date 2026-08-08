@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.3...v1.4.0) (2026-08-08)
+
+
+### Features
+
+* **inheritance:** publish Terraform child export ([#137](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/137)) ([e510105](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/e510105629c8eea4ee1c82cbcf3a63134a6a1746))
+
+
+### Bug Fixes
+
+* **inheritance:** make seed tests child-portable ([#141](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/141)) ([d011aca](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/d011aca625f0e49d612ee718b554ccbaa5d9f422))
+
 ## [1.3.3](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.2...v1.3.3) (2026-08-02)
 
 
