@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.1...v1.4.2) (2026-08-09)
+
+
+### Bug Fixes
+
+* **sync:** prevent duplicate template reviews ([#149](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/149)) ([415922a](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/415922a40db48ae6e2500bf54f66c62a52847d78))
+
 ## [1.4.1](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.0...v1.4.1) (2026-08-09)
 
 
