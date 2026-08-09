@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.0...v1.4.1) (2026-08-09)
+
+
+### Bug Fixes
+
+* **ci:** upgrade CodeQL Action to v4 ([#146](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/146)) ([58a349e](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/58a349ed2210950e971a716ffec12627ceecd77b))
+* **inheritance:** migrate Template Sync instructions ([#144](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/144)) ([76063e6](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/76063e6772c5b6178c516f8365c7ed9722b0c52a))
+
 ## [1.4.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.3.3...v1.4.0) (2026-08-08)
 
 
