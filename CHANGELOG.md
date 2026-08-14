@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.2...v1.4.3) (2026-08-14)
+
+
+### Bug Fixes
+
+* upgrade protected workflow actions ([#154](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/154)) ([c459146](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/c45914668487b184935410bdb4d9d8ec0263dafe)), closes [#153](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/153)
+
 ## [1.4.2](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.1...v1.4.2) (2026-08-09)
 
 
