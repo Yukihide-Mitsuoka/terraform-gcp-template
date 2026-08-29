@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.3...v1.4.4) (2026-08-29)
+
+
+### Bug Fixes
+
+* **ci:** skip public-only security jobs in private repos ([#160](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/160)) ([f923e02](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/f923e022b7d57c0bc2b6e5595dc9aa3979d16b66))
+
 ## [1.4.3](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.2...v1.4.3) (2026-08-14)
 
 
