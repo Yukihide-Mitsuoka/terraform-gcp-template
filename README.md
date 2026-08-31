@@ -56,7 +56,3 @@ workflows, docs skeleton) comes from the base — see its
 5. **Install local gates**: `make setup`.
 6. **Verify**: `make doctor && make build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
