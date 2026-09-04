@@ -17,6 +17,7 @@ old one. One line per entry. AI agents append entries in the same PR as the chan
 
 | Date | ID | Decision | Link |
 |------|----|----------|------|
+| 2026-09-04 | LOG-0044 | Port the protected ADR-0021 caller after its inherited policy reached `main`; resolve this inheritable template as a producer from the accepted base checkout, require English PR prose, and preserve Terraform-specific CI checks | [ADR-0021](../docs/foundation/adr/0021-scope-japanese-pull-request-prose-to-leaf-repositories.md) |
 | 2026-08-14 | LOG-0043 | Node.js 24移行を保護workflow境界へ手動移植し、5つのJavaScript ActionをFoundation承認済みmajorとcommit SHAへ更新する。trigger、permission、inputは維持し、継承可能な回帰テストで今後の旧major再混入を拒否する | [Issue #153](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/153) |
 | 2026-08-08 | LOG-0042 | ADR-0015の新規direct-child bootstrapをTerraform familyへ拡張するため、owner-qualified `inheritance-export.json`でfoundation契約、Terraform template overlay、Terraform governance/profileを継承対象として公開し、workflow caller、repository identity、project overlay、root README、Terraform project code、project docsを子所有として保護する | [Issue #136](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/136) |
 | 2026-08-02 | LOG-0041 | 直接親lockを`ef70594`から最終first-parent commit `74d9255`（ai-dev-foundation release 1.5.2）へ進め、PR #119/#120の継承内容とPR #122の保護workflowに対応する受理来歴を完成させる。子固有CHANGELOG、Terraform設定、GitHub設定、GCP状態は変更しない | [Issue #124](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/124) |
