@@ -31,7 +31,7 @@ ai-dev-foundation ──sync──▶ terraform-gcp-template ──sync──▶
 | Addition | Location |
 |----------|----------|
 | Terraform root-config layout (per-env) | [`infra/envs/`](infra/) with a worked `dev` example referencing the module library pinned at `?ref=v0.5.0` |
-| Canonical Makefile wired for this layout | [`Makefile`](Makefile) — fmt/lint/validate/test over `infra/`; `plan ENV=<env>`; heavier layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
+| Terraform task commands | [`Makefile`](Makefile) remains the CI entry; [`Taskfile.yml`](Taskfile.yml) mirrors fmt/lint/validate/test over `infra/` and `plan ENV=<env>` during the [Foundation migration](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation/pull/237). The layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
 | Terraform gitignore/state hygiene | `.gitignore` |
 
 Everything else (`.ai/` rules, `.skills/`, `.claude/` hooks and skills, `.github/`
@@ -56,3 +56,7 @@ workflows, docs skeleton) comes from the base — see its
 5. **Install local gates**: `make setup`.
 6. **Verify**: `make doctor && make build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
+
+Taskfile is available for local verification after installing Task from its
+[official instructions](https://taskfile.dev/docs/installation). Keep using `make` in
+automation until the protected CI and hook callers are ported in a reviewed PR.
