@@ -9,6 +9,7 @@ CLAUDE.md
 README.md
 CHANGELOG.md
 Makefile
+Taskfile.yml
 .env.example
 .gitignore
 .ai/architecture.md

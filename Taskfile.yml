@@ -1,0 +1,141 @@
+# ADR-0024 expansion: task commands mirror the child-owned Makefile until callers migrate.
+version: '3'
+silent: true
+
+vars:
+  ENV: '{{.ENV | default "dev"}}'
+
+tasks:
+  default:
+    cmds:
+      - task: help
+
+  help:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+
+  setup:
+    desc: Install git hooks (Terraform and scanners come from machine setup)
+    cmds:
+      - >-
+        if command -v pre-commit >/dev/null 2>&1; then
+          pre-commit install --hook-type pre-commit --hook-type pre-push;
+        else
+          echo "pre-commit not installed — local hooks skipped (CI runs the same gates)";
+        fi
+
+  format:
+    desc: Format Terraform (all, or FILE=<path>)
+    env:
+      FILE: '{{.FILE}}'
+    cmds:
+      - >-
+        if [ -n "${FILE:-}" ]; then
+          case "$FILE" in *.tf|*.tfvars) terraform fmt "$FILE";; *) :;; esac;
+        else
+          terraform fmt -recursive infra;
+        fi
+
+  lint:
+    desc: Check Terraform formatting and lint without fixes
+    cmds:
+      - terraform fmt -check -recursive infra
+      - >-
+        if command -v tflint >/dev/null 2>&1; then
+          tflint --recursive --chdir infra;
+        else
+          echo "tflint not installed — CI still enforces it";
+        fi
+
+  test:
+    desc: Full test suite
+    cmds:
+      - task: test-unit
+      - task: test-integration
+
+  test-unit:
+    desc: Terraform formatting and workflow contract tests
+    cmds:
+      - terraform fmt -check -recursive infra
+      - python3 -m unittest discover -s tests/governance -p 'test_*.py'
+      - python3 -m unittest discover -s tests/workflows -p 'test_*.py'
+
+  test-integration:
+    desc: Run terraform test for every test directory
+    cmds:
+      - >-
+        set -e;
+        for dir in $(find infra -name '*.tftest.hcl' -exec dirname {} \; | sort -u); do
+          echo "Testing $dir...";
+          (cd "$dir" && terraform init -backend=false -input=false >/dev/null && terraform test);
+        done
+
+  coverage:
+    desc: No application-code coverage in this IaC starter
+    cmds:
+      - 'echo "coverage: no application code in this IaC starter; nothing to measure"'
+
+  build:
+    desc: Credential-free validation of every environment
+    cmds:
+      - >-
+        set -e;
+        for dir in infra/envs/*/; do
+          echo "Validating $dir...";
+          (cd "$dir" && terraform init -backend=false -input=false >/dev/null && terraform validate);
+        done
+
+  run:
+    desc: Alias for plan
+    cmds:
+      - task: plan
+
+  plan:
+    desc: Plan an environment (ENV=dev by default; requires credentials)
+    env:
+      TASK_ENV: '{{.ENV}}'
+    cmds:
+      - 'cd "infra/envs/$TASK_ENV" && terraform init -input=false && terraform plan'
+
+  security-scan:
+    desc: Local secrets and IaC misconfiguration checks
+    cmds:
+      - >-
+        if command -v gitleaks >/dev/null 2>&1; then
+          gitleaks detect --no-banner;
+        else
+          echo "gitleaks not installed — CI still enforces SEC-002";
+        fi
+      - >-
+        if command -v trivy >/dev/null 2>&1; then
+          trivy config --exit-code 1 infra;
+        else
+          echo "trivy not installed — CI still enforces SEC-030";
+        fi
+
+  sbom:
+    desc: Generate SPDX and CycloneDX SBOMs into dist/
+    cmds:
+      - mkdir -p dist
+      - >-
+        if command -v syft >/dev/null 2>&1; then
+          syft . -o spdx-json=dist/sbom.spdx.json -o cyclonedx-json=dist/sbom.cdx.json &&
+          echo "SBOM written to dist/";
+        else
+          echo "syft not installed — release workflow generates the authoritative SBOM";
+        fi
+
+  clean:
+    desc: Remove workspace-local caches and artifacts
+    cmds:
+      - find infra -type d -name .terraform -exec rm -rf '{}' +
+      - rm -rf dist
+
+  doctor:
+    desc: Foundation metadata, workflow, and guard-hook checks
+    cmds:
+      - bash scripts/template-check.sh
+      - python3 -m unittest discover -s tests/governance -p 'test_*.py'
+      - python3 -m unittest discover -s tests/workflows -p 'test_*.py'
+      - bash .claude/hooks/tests/guard-bash.test.sh
