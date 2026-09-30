@@ -217,7 +217,7 @@ class InheritanceOwnershipTest(unittest.TestCase):
         for inherited in (
             ".ai/contracts/templates/yukihide-mitsuoka/terraform-gcp-template/",
             ".github/governance/profiles/",
-            "profiles/terraform-gcp/",
+            ".ai/contracts/foundation/",
         ):
             with self.subTest(inherited=inherited):
                 self.assertIn(inherited, export["inherited_paths"])
@@ -227,9 +227,13 @@ class InheritanceOwnershipTest(unittest.TestCase):
             "README.md",
             "infra/",
             "docs/inheritance/readmes/",
+            "profiles/",
+            "Taskfile.yml",
         ):
             with self.subTest(protected=protected):
                 self.assertIn(protected, export["protected_paths"])
+        self.assertNotIn("profiles/terraform-gcp/", export["inherited_paths"])
+        self.assertNotIn("Makefile", export["protected_paths"])
 
 
 if __name__ == "__main__":

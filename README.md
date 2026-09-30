@@ -31,7 +31,7 @@ ai-dev-foundation ──sync──▶ terraform-gcp-template ──sync──▶
 | Addition | Location |
 |----------|----------|
 | Terraform root-config layout (per-env) | [`infra/envs/`](infra/) with a worked `dev` example referencing the module library pinned at `?ref=v0.5.0` |
-| Terraform task commands | [`Taskfile.yml`](Taskfile.yml) is the canonical entry for fmt/lint/validate/test over `infra/` and `plan ENV=<env>`. [`Makefile`](Makefile) only forwards legacy calls during the [Foundation migration](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation/pull/237). The layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
+| Terraform task commands | [`Taskfile.yml`](Taskfile.yml) is the exclusive entry for fmt/lint/validate/test over `infra/` and `plan ENV=<env>`, following the [inherited Task contract](.ai/contracts/foundation/task-targets.md) |
 | Terraform gitignore/state hygiene | `.gitignore` |
 
 Everything else (`.ai/` rules, `.skills/`, `.claude/` hooks and skills, `.github/`
@@ -57,5 +57,5 @@ workflows, docs skeleton) comes from the base — see its
 6. **Verify**: `task doctor && task build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
 
-CI uses a pinned Task setup action. `make` is a temporary forwarding-only
-compatibility command for callers not yet migrated; do not add new Make recipes.
+CI uses a pinned Task setup action. Make compatibility and optional Makefile examples
+have been removed; use the repository-owned `Taskfile.yml`.

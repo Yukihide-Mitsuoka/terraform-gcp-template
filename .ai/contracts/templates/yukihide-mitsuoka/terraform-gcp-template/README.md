@@ -11,11 +11,11 @@ new direct children of `Yukihide-Mitsuoka/terraform-gcp-template`. The Foundatio
 `bootstrap-child` command reads this file from the exact parent source commit.
 
 The export passes the Foundation contract and this Terraform family overlay to a child.
-It also passes the Terraform governance profile and canonical Terraform Make profile.
+It also passes the Terraform governance profile and inherited Task contract.
 Repository identity, project overlays, workflow callers, root README, project
 documentation, Terraform configuration, source, and tests remain protected child-owned
 paths.
 
 Change the export only through a reviewed contract PR. Validate it with the repository
-governance tests and `make doctor`. Creating or enabling a remote repository, applying
+governance tests and `task doctor`. Creating or enabling a remote repository, applying
 GitHub governance, and running Terraform remain separate authenticated operations.
