@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.5...v2.0.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **taskfile:** complete Task-only migration ([#184](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/184))
+
+### Build System
+
+* **taskfile:** complete Task-only migration ([#184](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/issues/184)) ([9b2aee6](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/commit/9b2aee6995f087e53c2f5858c5421258b19d1fd9))
+
 ## [1.4.5](https://github.com/Yukihide-Mitsuoka/terraform-gcp-template/compare/v1.4.4...v1.4.5) (2026-09-03)
 
 
