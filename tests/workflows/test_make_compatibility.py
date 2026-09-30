@@ -36,7 +36,7 @@ class MakeCompatibilityTest(unittest.TestCase):
             fake_task.chmod(0o755)
             env = os.environ.copy()
             env.update(PATH=f"{directory}:{env['PATH']}", CAPTURE_FILE=str(capture))
-            file_name = "sample ' quoted.tf"
+            file_name = 'sample "quoted" `printf BAD`.tf'
             subprocess.run(
                 ["make", "--no-print-directory", "format", f"FILE={file_name}"],
                 cwd=ROOT, env=env, capture_output=True, text=True, check=True,
