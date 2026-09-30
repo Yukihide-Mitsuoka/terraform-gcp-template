@@ -31,7 +31,7 @@ ai-dev-foundation ──sync──▶ terraform-gcp-template ──sync──▶
 | Addition | Location |
 |----------|----------|
 | Terraform root-config layout (per-env) | [`infra/envs/`](infra/) with a worked `dev` example referencing the module library pinned at `?ref=v0.5.0` |
-| Terraform task commands | [`Taskfile.yml`](Taskfile.yml) now drives CI and mirrors fmt/lint/validate/test over `infra/` and `plan ENV=<env>`. [`Makefile`](Makefile) remains the local agent/hook entry during the [Foundation migration](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation/pull/237). The layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
+| Terraform task commands | [`Taskfile.yml`](Taskfile.yml) is the canonical entry for fmt/lint/validate/test over `infra/` and `plan ENV=<env>`. [`Makefile`](Makefile) only forwards legacy calls during the [Foundation migration](https://github.com/Yukihide-Mitsuoka/ai-dev-foundation/pull/237). The layered-foundations reference remains in [`profiles/terraform-gcp/`](profiles/terraform-gcp/) |
 | Terraform gitignore/state hygiene | `.gitignore` |
 
 Everything else (`.ai/` rules, `.skills/`, `.claude/` hooks and skills, `.github/`
@@ -53,10 +53,9 @@ workflows, docs skeleton) comes from the base — see its
    `apply` with an exact `--confirm-repo OWNER/REPOSITORY`; it changes settings.
    `scripts/setup-github.sh` is a compatibility wrapper for the same policy-driven
    `plan` and explicitly confirmed `apply` paths.
-5. **Install local gates**: `make setup`.
-6. **Verify**: `make doctor && make build` (build = credential-free validate of every env).
+5. **Install Task** from its [official instructions](https://taskfile.dev/docs/installation), then install local gates with `task setup`.
+6. **Verify**: `task doctor && task build` (build = credential-free validate of every env).
 7. Point your agent at the repo and assign it an issue.
 
-Taskfile is available for local verification after installing Task from its
-[official instructions](https://taskfile.dev/docs/installation). Keep using `make` in
-automation until the protected CI and hook callers are ported in a reviewed PR.
+CI uses a pinned Task setup action. `make` is a temporary forwarding-only
+compatibility command for callers not yet migrated; do not add new Make recipes.
