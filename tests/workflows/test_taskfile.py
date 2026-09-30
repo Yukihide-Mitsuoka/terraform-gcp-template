@@ -18,7 +18,7 @@ class TaskfileTest(unittest.TestCase):
                 self.assertFalse((ROOT / path).exists())
 
     def test_all_canonical_tasks_are_listed_without_execution(self):
-        result = subprocess.run(["task", "--list-all"], cwd=ROOT,
+        result = subprocess.run(["task", "--color=false", "--list-all"], cwd=ROOT,
                                 capture_output=True, text=True, check=True)
         for name in ("help", "setup", "format", "lint", "test", "test-unit",
                      "test-integration", "coverage", "build", "run", "plan",
