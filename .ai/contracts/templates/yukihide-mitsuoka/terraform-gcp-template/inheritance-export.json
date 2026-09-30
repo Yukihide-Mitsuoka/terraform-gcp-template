@@ -34,7 +34,6 @@
     ".skills/requirements.skill.md",
     "AGENTS.md",
     "SECURITY.md",
-    "profiles/terraform-gcp/",
     "renovate.json",
     "scripts/",
     "docs/foundation/"
@@ -70,19 +69,16 @@
     ".templatesyncignore",
     "CHANGELOG.md",
     "CLAUDE.md",
-    "Makefile",
     "Taskfile.yml",
     "README.md",
     "infra/",
-    "profiles/README.md",
-    "profiles/python-uv/",
-    "profiles/typescript-node/",
     "src/",
     "tests/",
     "docs/README.md",
     "docs/adr/",
     "docs/handoff.md",
-    "docs/inheritance/readmes/"
+    "docs/inheritance/readmes/",
+    "profiles/"
   ],
   "agent_inputs": [
     {

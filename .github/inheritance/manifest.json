@@ -72,7 +72,6 @@
     ".templatesyncignore",
     "CHANGELOG.md",
     "CLAUDE.md",
-    "Makefile",
     "Taskfile.yml",
     "README.md",
     "infra/",

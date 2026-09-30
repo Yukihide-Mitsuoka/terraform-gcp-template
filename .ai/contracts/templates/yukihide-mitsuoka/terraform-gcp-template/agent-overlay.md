@@ -17,7 +17,7 @@ protected project overlay.
   module implementation stays in the module repository.
 - Required check: `iac-scan` remains an additive, always-reported governance check for
   repositories that inherit the Terraform family profile.
-- Verification: use the repository's canonical `make` targets for Terraform formatting,
+- Verification: use the repository's canonical `task` commands for Terraform formatting,
   validation, tests, and build checks.
 - Execution boundary: repository files describe desired state. Terraform plan or apply,
   GitHub governance changes, and Google Cloud resource changes are separate authenticated
